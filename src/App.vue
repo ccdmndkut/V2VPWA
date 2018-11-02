@@ -1,45 +1,44 @@
 <template>
   <v-app>
-
-    <template v-if="beta==false">
+    <template>
       <login @fire="fire" v-if="this.locked == true"></login>
-      <template v-if="info == true">
-        <info v-bind:clientDataFile.sync="clientDataFile" v-bind:info.sync="info"></info>
-      </template>
+      <template v-if="!this.locked">
 
-      <template v-if="this.locked == false && info === false">
+        <info v-if="info" v-bind:clientDataFile.sync="clientDataFile" v-bind:info.sync="info"></info>
 
-        <mymenu v-bind:isMobileDevice="isMobileDevice" app @logout="logout" @newNote="newNote" @changeDateToday="date = today, query='', clientToggle=false" :date='date' @changeDateYest="changeDate" @sentquery="makequery" :query='query' :names='names' :customFilter='customFilter' v-if="!editToggle && !newToggle "></mymenu>
+        <template v-if="!info">
+          <mymenu v-bind:isMobileDevice="isMobileDevice" @logout="logout" @newNote="newNote" @changeDateToday="date = today, query='', clientToggle=false" :date='date' @changeDateYest="changeDate" @sentquery="makequery" :query='query' :names='names' :customFilter='customFilter' v-if="!editToggle && !newToggle "></mymenu>
 
-        <newnote @submitNew="submitNew" @editToggleFunc='editToggleFunc' :noteNew='noteNew' :types='types' :names='names' v-if="newToggle"></newnote>
+          <newnote @submitNew="submitNew" @editToggleFunc='editToggleFunc' :noteNew='noteNew' :types='types' :names='names' v-if="newToggle"></newnote>
 
-        <editnote @submitEdit="submitEdit" @editToggleFunc='editToggleFunc' :noteEdit='noteEdit' :types='types' v-if="editToggle"></editnote>
+          <editnote @submitEdit="submitEdit" @editToggleFunc='editToggleFunc' :noteEdit='noteEdit' :types='types' v-if="editToggle"></editnote>
 
-        <v-content>
-          <v-container class='mt-3' fluid fill-height>
-            <v-flex xs12 md10 offset-md1 lg8 offset-lg2>
-              <transition-group name="staggered-fade" v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave"> <template v-if="!query.length && !editToggle && !newToggle && !clientToggle">
-                  <list v-bind:class="{list: !isMobileDevice}" v-for="(item, index) in dateFunc" v-bind:info.sync="info" @clientInfo="clientInfo" @priorityUp='priorityUp' @deleteNote='deleteNote' @completedCheck="completedCheck" @editNote='editNote' @senttoggleClient="toggleClient" @pullNote="pullNote" v-bind:item="item" v-bind:index="index" v-bind:isMobileDevice="isMobileDevice" :key="item['.key']"></list>
-                </template>
-              </transition-group>
+          <v-content>
+            <v-container class='mt-3' fluid fill-height>
+              <v-flex xs12 md10 offset-md1 lg8 offset-lg2>
+                <transition-group name="staggered-fade" v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave"> <template v-if="!query.length && !editToggle && !newToggle && !clientToggle">
+                    <list v-bind:class="{list: !isMobileDevice}" v-for="(item, index) in dateFunc" v-bind:info.sync="info" @clientInfo="clientInfo" @priorityUp='priorityUp' @deleteNote='deleteNote' @completedCheck="completedCheck" @editNote='editNote' @senttoggleClient="toggleClient" @pullNote="pullNote" v-bind:item="item" v-bind:index="index" v-bind:isMobileDevice="isMobileDevice" :key="item['.key']"></list>
+                  </template>
+                </transition-group>
 
-              <transition-group name="staggered-fade" v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave">
-                <template v-if="clientToggle && !query.length && !editToggle && !newToggle ">
-                  <list v-bind:class="{list: !isMobileDevice}" v-for="(item, index) in clientFunc" v-bind:info.sync="info" @clientInfo="clientInfo" @priorityUp='priorityUp' @deleteNote='deleteNote' @completedCheck="completedCheck" @editNote='editNote' @senttoggleClient="toggleClient" @pullNote="pullNote" v-bind:item="item" v-bind:index="index" v-bind:isMobileDevice="isMobileDevice" :key="item['.key']"></list>
-                </template>
-              </transition-group>
+                <transition-group name="staggered-fade" v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave">
+                  <template v-if="clientToggle && !query.length && !editToggle && !newToggle ">
+                    <list v-bind:class="{list: !isMobileDevice}" v-for="(item, index) in clientFunc" v-bind:info.sync="info" @clientInfo="clientInfo" @priorityUp='priorityUp' @deleteNote='deleteNote' @completedCheck="completedCheck" @editNote='editNote' @senttoggleClient="toggleClient" @pullNote="pullNote" v-bind:item="item" v-bind:index="index" v-bind:isMobileDevice="isMobileDevice" :key="item['.key']"></list>
+                  </template>
+                </transition-group>
 
-              <transition-group name="staggered-fade" v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave">
-                <template v-if="query.length && !editToggle && !newToggle && !clientToggle">
-                  <list v-bind:class="{list: !isMobileDevice}" v-for="(item, index) in searchFunc" v-bind:info.sync="info" @clientInfo="clientInfo" @priorityUp='priorityUp' @deleteNote='deleteNote' @completedCheck="completedCheck" @editNote='editNote' @senttoggleClient="toggleClient" @pullNote="pullNote" v-bind:item="item" v-bind:index="index" v-bind:isMobileDevice="isMobileDevice" :key="item['.key']"></list>
-                </template>
-              </transition-group>
+                <transition-group name="staggered-fade" v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave">
+                  <template v-if="query.length && !editToggle && !newToggle && !clientToggle">
+                    <list v-bind:class="{list: !isMobileDevice}" v-for="(item, index) in searchFunc" v-bind:info.sync="info" @clientInfo="clientInfo" @priorityUp='priorityUp' @deleteNote='deleteNote' @completedCheck="completedCheck" @editNote='editNote' @senttoggleClient="toggleClient" @pullNote="pullNote" v-bind:item="item" v-bind:index="index" v-bind:isMobileDevice="isMobileDevice" :key="item['.key']"></list>
+                  </template>
+                </transition-group>
 
-            </v-flex>
-            <v-btn @click="betachanger" round small flat color="grey" class='ver'>stable 10/17</v-btn>
+              </v-flex>
+              <v-btn @click="betachanger" round small flat color="grey" class='ver'>stable 10/17</v-btn>
 
-          </v-container>
-        </v-content>
+            </v-container>
+          </v-content>
+        </template>
 
       </template>
       <!-- </v-flex>

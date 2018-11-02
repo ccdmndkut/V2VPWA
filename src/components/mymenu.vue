@@ -1,67 +1,35 @@
 <template>
-  <v-toolbar v-bind:class="{menu: !isMobileDevice}" app height="80" fixed color="vueblue">
-    <v-flex xs12>
-      <v-layout row wrap>
-        <v-flex v-if="isMobileDevice==false">
-          <v-layout row wrap justify-start>
+  <v-toolbar height="70" app fixed color="vueblue">
+    <div id="grid">
+      <div id="left">
+        <v-btn large icon @click="$emit('changeDateYest', yest)">
+          <v-icon color="vuegreen" large>arrow_back</v-icon>
+        </v-btn>
+        <v-btn large icon @click="$emit('changeDateToday')">
+          <v-icon color="vuegreen" large>arrow_downward</v-icon>
+        </v-btn>
+        <v-btn large icon @click="$emit('changeDateYest', tom)">
+          <v-icon color="vuegreen" large>arrow_forward</v-icon>
+        </v-btn>
+        <v-btn large icon @click="$emit('newNote')">
+          <v-icon color="low" large>fiber_new</v-icon>
+        </v-btn>
+      </div>
+      <div id="mid">
+        <v-autocomplete id="searchBar" placeholder='Client Name' solo prepend-inner-icon="search" flat class="mx-3" @change="$emit('sentquery', newquery); clearQuery();" v-model="newquery" :items="names" item-text="name" :filter="customFilter"></v-autocomplete>
+      </div>
+      <div id="right">
+        <v-btn round color="vuegreen" dark flat small @click="cam">
+          Cam
+        </v-btn>
+      </div>
 
-            <v-tooltip bottom>
-              <template slot="activator">
-                <v-btn large icon @click="$emit('changeDateYest', yest)">
-                  <v-icon color="vuegreen" large>arrow_back</v-icon>
-                </v-btn>
-                <v-btn large icon @click="$emit('changeDateToday')">
-                  <v-icon color="vuegreen" large>arrow_downward</v-icon>
-                </v-btn>
-                <v-btn large icon @click="$emit('changeDateYest', tom)">
-                  <v-icon color="vuegreen" large>arrow_forward</v-icon>
-                </v-btn>
-              </template>
-              <span>Change date viewing</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <v-btn slot="activator" large icon @click="$emit('newNote')">
-                <v-icon color="low" large>fiber_new</v-icon>
-              </v-btn>
-              <span>Add new note</span>
-            </v-tooltip>
-          </v-layout>
-        </v-flex>
-        <v-flex xs1 class='mr-3'>
-          <v-btn v-if="isMobileDevice==true" large icon @click="$emit('changeDateToday')">
-            <v-icon color="vuegreen" large>arrow_downward</v-icon>
-          </v-btn>
-        </v-flex>
-
-        <v-flex v-if="isMobileDevice==false">
-          <v-layout row wrap class="mt-1" justify-center>
-            <div style="minWidth: 150px; width: 100%">
-              <v-autocomplete placeholder='Client Name' solo prepend-inner-icon="search" flat class="mx-3" @change="$emit('sentquery', newquery); clearQuery();" v-model="newquery" :items="names" item-text="name" :filter="customFilter"></v-autocomplete>
-            </div>
-          </v-layout>
-        </v-flex>
-
-        <v-flex v-if="isMobileDevice==true">
-          <v-layout row wrap class="mt-1" justify-center>
-            <div style="width: 100%">
-              <v-autocomplete placeholder='Client Name' solo prepend-inner-icon="search" flat class="mx-3" @change="$emit('sentquery', newquery)" v-model="newquery" :items="names" item-text="name" :filter="customFilter"></v-autocomplete>
-            </div>
-          </v-layout>
-        </v-flex>
-
-        <v-flex v-if="isMobileDevice==false">
-          <v-layout row wrap justify-end="">
-
-            <v-btn round color="vuegreen" dark flat small @click="cam">
-              Cam
-            </v-btn>
-            <!-- <v-btn round color="vuegreen" dark flat small @click="$emit('logout')">
+      <!-- <v-btn round color="vuegreen" dark flat small @click="$emit('logout')">
               Log-Out
             </v-btn> -->
-          </v-layout>
-        </v-flex>
-      </v-layout>
-    </v-flex>
+
+    </div>
+
   </v-toolbar>
 
 </template>
@@ -69,15 +37,7 @@
 <script>
 export default {
   name: "mymenu",
-
-  props: {
-    isMobileDevice: Boolean,
-    query: "",
-    names: "",
-    customFilter: "",
-    date: ""
-  },
-
+  props: ["isMobileDevice", "query", "names", "customFilter", "date"],
   data() {
     return {
       newquery: "",
@@ -97,5 +57,48 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
+#grid {
+  display: grid;
+  grid-template-columns: 1fr repeat(3, 25vw) 1fr;
+  align-items: center;
+  justify-self: center;
+  width: 100%;
+}
+#left {
+  grid-column: 2 / span 1;
+  justify-self: left;
+}
+#mid {
+  margin-top: 8px;
+
+  grid-column: 3 / span 1;
+  justify-self: center;
+  max-width: 400px;
+}
+#right {
+  grid-column: 4 / span 1;
+  justify-self: right;
+}
+@media only screen and (max-width: 900px) {
+  #grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    width: 100%;
+  }
+  #left {
+    grid-column: 1 / span 1;
+    justify-self: center;
+  }
+  #mid {
+    margin-top: 8px;
+    grid-column: 2 / span 1;
+    justify-self: center;
+    max-width: 400px;
+  }
+  #right {
+    display: none;
+  }
+}
 </style>
