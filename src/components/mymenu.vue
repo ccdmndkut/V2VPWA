@@ -20,7 +20,7 @@
       </div>
       <div id="right">
         <v-btn round color="vuegreen" dark flat small @click="cam">
-          Cam
+          {{clock}}
         </v-btn>
       </div>
 
@@ -37,7 +37,7 @@
 <script>
 export default {
   name: "mymenu",
-  props: ["isMobileDevice", "query", "names", "customFilter", "date"],
+  props: ["isMobileDevice", "query", "names", "customFilter", "date", "clock"],
   data() {
     return {
       newquery: "",

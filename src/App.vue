@@ -7,7 +7,7 @@
         <info v-if="info" v-bind:clientDataFile.sync="clientDataFile" v-bind:info.sync="info"></info>
 
         <template v-if="!info">
-          <mymenu v-bind:isMobileDevice="isMobileDevice" @logout="logout" @newNote="newNote" @changeDateToday="date = today, query='', clientToggle=false" :date='date' @changeDateYest="changeDate" @sentquery="makequery" :query='query' :names='names' :customFilter='customFilter' v-if="!editToggle && !newToggle "></mymenu>
+          <mymenu v-bind:isMobileDevice="isMobileDevice" @logout="logout" @newNote="newNote" @changeDateToday="date = today, query='', clientToggle=false" :date='date' @changeDateYest="changeDate" @sentquery="makequery" :query='query' :names='names' :customFilter='customFilter' :clock='clock' v-if="!editToggle && !newToggle "></mymenu>
 
           <newnote @submitNew="submitNew" @editToggleFunc='editToggleFunc' :noteNew='noteNew' :types='types' :names='names' v-if="newToggle"></newnote>
 
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+
 import firebase from "firebase";
 import firestore from "./components/firebaseInit";
 import Vue from "vue";
@@ -76,7 +77,7 @@ export default {
     beta
   },
   data() {
-    return {
+    return {      
       beta: false,
       nameSearched: {
         name: String
@@ -276,11 +277,37 @@ export default {
       console.log(this.clientToggle);
     }
   },
+  created: function() {
+    setTimeout(this.showTime() , 1000);
+  },
   // METHODS
   methods: {
+    clockerstart() {
+    setTimeout(this.showTime() , 1000);
+    },
+    showTime() {
+      var time = new Date();
+      var hr = time.getHours();
+      var min = time.getMinutes();
+      var sec = time.getSeconds();
+      var am_pm = "AM";
+      if (hr > 12) {
+        hr -= 12;
+        am_pm = "PM";
+      }
+      if (hr == 0) {
+        hr = 12;
+        am_pm = "AM";
+      }
+      hr = hr > 10 ? "0" + hr : hr;
+      min = min > 10 ? "0" + min : min;
+      sec = sec > 10 ? "0" + sec : sec;
+      var currentTime = hr + ":" + min + ":" + sec + " " + am_pm;
+      this.clock = sec;
+    },
     betachanger: function() {
       // this.beta = !this.beta;
-      window.location.replace("https://v2vbeta.netlify.com/");
+      window.open("https://v2vbeta.netlify.com/");
     },
     clientInfo(item) {
       var self = this;
