@@ -1,7 +1,9 @@
 <template>
-    <div>
-
-    </div>
+    <v-app>
+        <div>
+            {{user.email}}
+        </div>
+    </v-app>
 </template>
 <script>
 import firebase from "firebase";
@@ -22,6 +24,16 @@ export default {
           this.user = {};
           alert("logged out");
         });
+    }
+  },
+  computed: {
+    userLength() {
+      var u = this.user;
+      if (this.user) {
+        return Object.keys(u);
+      } else {
+        return 0;
+      }
     }
   }
 };

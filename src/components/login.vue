@@ -10,7 +10,6 @@
             <!-- <button @click.prevent="$emit('fire')">login</button> -->
             <button @click.prevent="login()">login</button>
             <button @click="logout()">logout</button>
-
           </div>
         </div>
       </div>
@@ -55,7 +54,7 @@ export default {
         .then(() => this.logmein());
     },
     logmein() {
-      var user = firebase.auth().currentUser;
+      const user = firebase.auth().currentUser;
       this.user = user;
       this.$emit("fire");
     }
@@ -113,7 +112,7 @@ export default {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #4caf50;
+  background: #006064;
   width: 40%;
   margin: 5px;
   border: 0;
@@ -176,11 +175,11 @@ export default {
   color: #ef3b3a;
 }
 #body {
-  background: #76b852; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #76b852, #8dc26f);
-  background: -moz-linear-gradient(right, #76b852, #8dc26f);
-  background: -o-linear-gradient(right, #76b852, #8dc26f);
-  background: linear-gradient(to left, #76b852, #8dc26f);
+  background: #00787e; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #00787e, #00484b);
+  background: -moz-linear-gradient(right, #00787e, #00484b);
+  background: -o-linear-gradient(right, #00787e, #00484b);
+  background: linear-gradient(to left, #00787e, #00484b);
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

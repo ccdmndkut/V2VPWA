@@ -1,10 +1,13 @@
 <template>
-  <div>
-    <login v-if="this.userLength == 0" @fire="fire"></login>
-    <!-- <home v-if="this.userLength == 36" :user="this.user.email"></home> -->
-    <home v-if="this.user" :user="user"></home>
-
-  </div>
+  <v-app>
+    <transition name="fade">
+      <login v-if="this.userLength == 0" @fire="fire"></login>
+    </transition>
+    <!-- <home v-if="this.user" :user="user"></home> -->
+    <transition name="fade">
+      <maincont v-if="this.user" :user="user"></maincont>
+    </transition>
+  </v-app>
 
 </template>
 
@@ -12,13 +15,14 @@
 import firebase from "firebase";
 import firestore from "./components/firebaseInit";
 import login from "./components/login";
-import home from "./components/home";
+// import home from "./components/home";
+import maincont from "./components/maincont";
 
 export default {
   name: "App",
   components: {
     login,
-    home
+    maincont
   },
   data() {
     return {
