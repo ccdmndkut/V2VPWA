@@ -1,13 +1,18 @@
 <template>
-  <v-app>
-    <transition name="fade">
-      <login v-if="this.userLength == 0" @fire="fire"></login>
-    </transition>
-    <!-- <home v-if="this.user" :user="user"></home> -->
-    <transition name="fade">
-      <maincont v-if="this.user" :user="user"></maincont>
-    </transition>
-  </v-app>
+  <div>
+    <loader v-if="loading"> </loader>
+    <v-app>
+      <template v-if="!loading">
+        <transition name="fade">
+          <login v-if="!loggedIn" @fire="fire"></login>
+        </transition>
+        <!-- <home v-if="this.user" :user="user"></home> -->
+        <transition name="fade">
+          <maincont v-if="loggedIn" :user="user"></maincont>
+        </transition>
+      </template>
+    </v-app>
+  </div>
 
 </template>
 
@@ -17,38 +22,57 @@ import firestore from "./components/firebaseInit";
 import login from "./components/login";
 // import home from "./components/home";
 import maincont from "./components/maincont";
+import loader from "./components/loader";
 
 export default {
   name: "App",
   components: {
     login,
-    maincont
+    maincont,
+    loader
   },
   data() {
     return {
-      user: null,
+      // user: null,
       scrollBar: "none",
-      loggedIn: false
+      user: "",
+      loading: true
     };
   },
   computed: {
-    userLength() {
+    loggedIn() {
       var u = this.user;
-      if (this.user) {
-        return Object.keys(u).length;
+      if (u) {
+        return true;
+        // return Object.keys(u).length;
       } else {
-        return 0;
+        return false;
       }
     }
   },
   methods: {
-    fire() {
-      this.user = firebase.auth().currentUser;
-      // this.loggedIn = this.user.I;
-      this.locked = false;
-      document.querySelector("body").classList.remove("bs");
-    }
+    // fire() {
+    //   this.user = firebase.auth().currentUser;
+    //   this.loggedIn = true;
+    //   this.locked = false;
+    //   document.querySelector("body").classList.remove("bs");
+    // }
+  },
+  mounted() {
+    var self = this;
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        self.user = user;
+        self.loading = false;
+      } else {
+        self.loading = false;
+
+        // User is signed out.
+        // ...
+      }
+    });
   }
+
   // watch: {
   //   locked() {
   //     document.querySelector("body").style.transform = this.locked
@@ -58,7 +82,7 @@ export default {
   // }
 };
 </script>
-<style>
+<style scoped>
 .bs::-webkit-scrollbar {
   display: none;
 }
