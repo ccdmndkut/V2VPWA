@@ -1,10 +1,10 @@
 <template>
-    <div id="body">
-        <h1>
-            loading
+  <div id="body">
+    <h1>
+      loading
 
-        </h1>
-    </div>
+    </h1>
+  </div>
 
 </template>
 

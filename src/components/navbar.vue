@@ -23,18 +23,25 @@
         <v-btn round color="vuegreen" dark flat small @click="cam">
           cam
         </v-btn>
+        <v-btn round color="vuegreen" dark flat small @click="logout">
+          Logout </v-btn>
       </div>
     </div>
   </v-toolbar>
 
 </template>
 <script>
+import firebase from "firebase";
 export default {
   name: "navbar",
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    logout() {
+      this.$emit("logout");
+    }
+  },
   computed: {}
 };
 </script>

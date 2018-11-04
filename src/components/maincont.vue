@@ -1,21 +1,27 @@
 <template>
   <div>
-    <navbar></navbar>
+    <navbar app @logout="logout"> </navbar>
     <v-content>
-      <div v-if="!this.loading">
-        <div v-for="(name, i) in tasks" :key="i">
-          <v-chip>
-            {{name.name}}
-          </v-chip>
-        </div>
-      </div>
+      <v-container fluid>
+        <template v-if="!loading">
+          <v-btn @click="switchdb" color="success">text</v-btn>
+          <div v-for="(name, i) in tasks" :key="i">
+            <v-chip @click="tasks.pop()">
+              {{i +1}}. {{name.name}}
+            </v-chip>
+          </div>
+        </template>
+      </v-container>
     </v-content>
   </div>
 
 </template>
 <script>
 import firebase from "firebase";
+import firestore from "./firebaseInit";
+
 import navbar from "./navbar";
+
 export default {
   name: "maincont",
   components: {
@@ -26,18 +32,32 @@ export default {
     return {
       myemail: this.user.email,
       loading: true,
-      tasks: ""
+      tasks: "",
+      db: "trash"
     };
   },
   methods: {
+    fs(i) {
+      this.loading = true;
+      this.$binding("users", firebase.firestore().collection(i)).then(users => {
+        console.log("got db"); // => __ob__: Observer
+        this.loading = false;
+        // this.$emit("loadingTrigger", false);
+        this.tasks = users;
+      });
+    },
+    switchdb() {
+      this.loading = true;
+
+      if (this.db == "trash") {
+        this.db = "clients";
+      } else {
+        this.db = "trash";
+      }
+      this.fs(this.db);
+    },
     logout() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.user = {};
-          alert("logged out");
-        });
+      this.$emit("logout");
     }
   },
   computed: {
@@ -50,16 +70,25 @@ export default {
       }
     }
   },
+  // firestore() {
+  //   return {
+  //     persons: {
+  //       // collection reference.
+  //       ref: firestore.collection(this.db),
+  //       // Bind the collection as an object if you would like to.
+  //       objects: false,
+  //       resolve: data => {
+  //         this.tasks = data;
+  //         this.loading = false;
+  //       },
+  //       reject: err => {
+  //         console.log(err);
+  //       }
+  //     }
+  //   };
+  // }
   mounted() {
-    // Binding Collections
-
-    this.$binding("users", firebase.firestore().collection("trash")).then(
-      users => {
-        console.log(users); // => __ob__: Observer
-        this.loading = false;
-        this.tasks = users;
-      }
-    );
+    this.fs("clients");
   }
 };
 </script>

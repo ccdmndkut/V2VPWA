@@ -1,17 +1,18 @@
 <template>
-  <v-app>
-    <v-content id="body">
+  <v-app id="body">
+    <v-content>
       <div class="login-page">
-        <div class="form">
-          <div class="login-form">
-            <div id="err">{{errM}}</div>
-            <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" placeholder="username" />
-            <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" v-model="password" type="password" placeholder="password" />
-            <!-- <button @click.prevent="$emit('fire')">login</button> -->
-            <button @click.prevent="login()">login</button>
-            <button @click="logout()">logout</button>
+        <transition name="fade">
+          <div class="form">
+            <div class="login-form">
+              <div id="err">{{errM}}</div>
+              <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" placeholder="username" />
+              <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" v-model="password" type="password" placeholder="password" />
+              <!-- <button @click.prevent="$emit('fire')">login</button> -->
+              <button @click.prevent="login()">login</button>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </v-content>
   </v-app>
@@ -48,15 +49,11 @@ export default {
         });
     },
     login() {
+      this.$emit("loadingTrigger", true);
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => this.logmein());
-    },
-    logmein() {
-      const user = firebase.auth().currentUser;
-      this.user = user;
-      this.$emit("fire");
+        .then(() => console.log("logged in"));
     }
   },
   computed: {},
@@ -112,8 +109,8 @@ export default {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #006064;
-  width: 40%;
+  background: rgb(0, 96, 100);
+  width: 100%;
   margin: 5px;
   border: 0;
   padding: 15px;
@@ -126,7 +123,7 @@ export default {
 .form button:hover,
 .form button:active,
 .form button:focus {
-  background: #43a047;
+  background: rgb(0, 96, 100, 0.9);
 }
 .form .message {
   margin: 15px 0 0;

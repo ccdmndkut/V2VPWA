@@ -1,26 +1,27 @@
 <template>
-  <div>
-    <loader v-if="loading"> </loader>
-    <v-app>
-      <template v-if="!loading">
-        <transition name="fade">
-          <login v-if="!loggedIn" @fire="fire"></login>
-        </transition>
-        <!-- <home v-if="this.user" :user="user"></home> -->
-        <transition name="fade">
-          <maincont v-if="loggedIn" :user="user"></maincont>
-        </transition>
-      </template>
-    </v-app>
-  </div>
-
+    <div>
+        <loader v-if="loading"> </loader>
+        <v-app v-if="!loading">
+            <template>
+                <template v-if="!loggedIn">
+                    <transition name="zoom">
+                        <login @loadingTrigger="loadingTrigger"></login>
+                    </transition>
+                </template>
+                <template v-if="loggedIn">
+                    <transition name="fade">
+                        <maincont @loadingTrigger="loadingTrigger" @logout="logout" :user="user"></maincont>
+                    </transition>
+                </template>
+            </template>
+        </v-app>
+    </div>
 </template>
 
 <script>
 import firebase from "firebase";
 import firestore from "./components/firebaseInit";
 import login from "./components/login";
-// import home from "./components/home";
 import maincont from "./components/maincont";
 import loader from "./components/loader";
 
@@ -33,16 +34,14 @@ export default {
   },
   data() {
     return {
-      // user: null,
       scrollBar: "none",
       user: "",
-      loading: true
+      loading: Boolean
     };
   },
   computed: {
     loggedIn() {
-      var u = this.user;
-      if (u) {
+      if (this.user) {
         return true;
         // return Object.keys(u).length;
       } else {
@@ -51,12 +50,21 @@ export default {
     }
   },
   methods: {
-    // fire() {
-    //   this.user = firebase.auth().currentUser;
-    //   this.loggedIn = true;
-    //   this.locked = false;
-    //   document.querySelector("body").classList.remove("bs");
-    // }
+    loadingTrigger(l) {
+      console.log("loader triggered");
+      this.loading = l;
+    },
+    logout() {
+      this.loading = true;
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.user = firebase.auth().currentUser;
+          console.log("logged out");
+          this.loading = false;
+        });
+    }
   },
   mounted() {
     var self = this;
@@ -65,29 +73,16 @@ export default {
         self.user = user;
         self.loading = false;
       } else {
+        console.log("no user logged in");
         self.loading = false;
-
-        // User is signed out.
-        // ...
       }
     });
   }
-
-  // watch: {
-  //   locked() {
-  //     document.querySelector("body").style.transform = this.locked
-  //       ? "translateX(500px)"
-  //       : "translateY(-300px)";
-  //   }
-  // }
 };
 </script>
-<style scoped>
+<style>
 .bs::-webkit-scrollbar {
   display: none;
-}
-#ani {
-  transition: 1000ms;
 }
 </style>
 
