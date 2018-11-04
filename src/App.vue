@@ -1,60 +1,43 @@
 <template>
-  <v-app>
-
+  <div>
     <login v-if="this.userLength == 0" @fire="fire"></login>
-    <div v-if="this.userLength > 0">
-      <v-btn @click=" logger" color="success">log</v-btn>
-      <v-btn @click=" logout" color="success">log out</v-btn>
+    <!-- <home v-if="this.userLength == 36" :user="this.user.email"></home> -->
+    <home v-if="this.user" :user="user"></home>
 
-      <!-- {{user.uid}} -->
-    </div>
+  </div>
 
-  </v-app>
 </template>
 
 <script>
 import firebase from "firebase";
 import firestore from "./components/firebaseInit";
 import login from "./components/login";
+import home from "./components/home";
+
 export default {
   name: "App",
   components: {
-    login
+    login,
+    home
   },
-  props: [],
   data() {
     return {
-      user: {},
+      user: null,
       scrollBar: "none",
       loggedIn: false
     };
   },
-  watch: {
-    locked() {
-      document.querySelector("body").style.transform = this.locked
-        ? "translateX(500px)"
-        : "translateY(-300px)";
-    }
-  },
   computed: {
     userLength() {
       var u = this.user;
-      return Object.keys(u).length;
+      if (this.user) {
+        return Object.keys(u).length;
+      } else {
+        return 0;
+      }
     }
   },
   methods: {
-    logout() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.user = {};
-          alert("logged out");
-        });
-    },
-    logger() {
-      console.log(this.user);
-    },
     fire() {
       this.user = firebase.auth().currentUser;
       // this.loggedIn = this.user.I;
@@ -62,6 +45,13 @@ export default {
       document.querySelector("body").classList.remove("bs");
     }
   }
+  // watch: {
+  //   locked() {
+  //     document.querySelector("body").style.transform = this.locked
+  //       ? "translateX(500px)"
+  //       : "translateY(-300px)";
+  //   }
+  // }
 };
 </script>
 <style>

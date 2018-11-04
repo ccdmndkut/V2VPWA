@@ -1,19 +1,22 @@
 <template>
-  <v-content id="body">
-    <div class="login-page">
-      <div class="form">
-        <div class="login-form">
-          <div id="err">{{errM}}</div>
-          <input @focus="errM=''" v-model="email" type="text" placeholder="username" />
-          <input @keydown.enter="login()" @focus="errM=''" v-model="password" type="password" placeholder="password" />
-          <!-- <button @click.prevent="$emit('fire')">login</button> -->
-          <button @click.prevent="login()">login</button>
-          <button @click="logout()">logout</button>
+  <v-app>
+    <v-content id="body">
+      <div class="login-page">
+        <div class="form">
+          <div class="login-form">
+            <div id="err">{{errM}}</div>
+            <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" placeholder="username" />
+            <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" v-model="password" type="password" placeholder="password" />
+            <!-- <button @click.prevent="$emit('fire')">login</button> -->
+            <button @click.prevent="login()">login</button>
+            <button @click="logout()">logout</button>
 
+          </div>
         </div>
       </div>
-    </div>
-  </v-content>
+    </v-content>
+  </v-app>
+
 </template>
 
 <script>
@@ -23,10 +26,13 @@ export default {
   data() {
     return {
       user: {},
-      email: "",
+      email: "chriscombs@vaclaims.net",
       password: "",
       errC: "",
-      errM: ""
+      errM: "",
+      isActive: false,
+      isActiveb: false,
+      err: ""
     };
   },
   methods: {
@@ -38,6 +44,7 @@ export default {
           alert("logged out");
         })
         .catch(function(error) {
+          this.err = error;
           // An error happened.
         });
     },
@@ -96,19 +103,12 @@ export default {
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
+  transition: 300ms;
 }
-.form input:focus {
-  animation: inpa 500ms;
+.active {
+  border-radius: 25px;
 }
-@keyframes inpa {
-  0%,
-  100% {
-    width: 96%;
-  }
-  50% {
-    width: 100%;
-  }
-}
+
 .form button {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
