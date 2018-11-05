@@ -3,12 +3,12 @@
     <navbar app @logout="logout"> </navbar>
     <v-content>
       <v-container fluid>
+        <div v-if="loading" class="text-xs-center">
+          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+        </div>
         <template v-if="!loading">
-          <v-btn @click="switchdb" color="success">text</v-btn>
-          <div v-for="(name, i) in tasks" :key="i">
-            <v-chip @click="tasks.pop()">
-              {{i +1}}. {{name.name}}
-            </v-chip>
+          <div v-for="(item, i) in db.tasks" :key="i">
+            <listitem :loading="loading" :item="item"></listitem>
           </div>
         </template>
       </v-container>
@@ -19,76 +19,66 @@
 <script>
 import firebase from "firebase";
 import firestore from "./firebaseInit";
-
 import navbar from "./navbar";
+import listitem from "./listitem";
 
 export default {
   name: "maincont",
   components: {
-    navbar
+    navbar,
+    listitem
   },
   props: ["user"],
   data() {
     return {
       myemail: this.user.email,
-      loading: true,
-      tasks: "",
-      db: "trash"
+      loading: Boolean,
+      db: {
+        tasks: ""
+      }
     };
   },
   methods: {
     fs(i) {
       this.loading = true;
-      this.$binding("users", firebase.firestore().collection(i)).then(users => {
+      this.$binding("tasks", firebase.firestore().collection(i)).then(tasks => {
         console.log("got db"); // => __ob__: Observer
-        this.loading = false;
         // this.$emit("loadingTrigger", false);
-        this.tasks = users;
+        this.db.tasks = tasks;
+        this.loaded();
       });
     },
-    switchdb() {
-      this.loading = true;
-
-      if (this.db == "trash") {
-        this.db = "clients";
-      } else {
-        this.db = "trash";
-      }
-      this.fs(this.db);
+    loaded() {
+      this.loading = false;
     },
     logout() {
       this.$emit("logout");
     }
   },
   computed: {
-    userLength() {
-      var u = this.user;
-      if (this.user) {
-        return Object.keys(u);
-      } else {
-        return 0;
+    dblength() {
+      return this.tasks.length;
+    },
+    userdbdef() {
+      let user = this.user.email;
+      if (user == "chriscombs@vaclaims.net") {
+        return {
+          tasks: "tasks",
+          client: "clients",
+          trash: "trash"
+        };
+      } else if (user == "denvercombs@vaclaims.net") {
+        return {
+          tasks: "denver",
+          client: "clientsdlc",
+          trash: "trash"
+        };
       }
     }
   },
-  // firestore() {
-  //   return {
-  //     persons: {
-  //       // collection reference.
-  //       ref: firestore.collection(this.db),
-  //       // Bind the collection as an object if you would like to.
-  //       objects: false,
-  //       resolve: data => {
-  //         this.tasks = data;
-  //         this.loading = false;
-  //       },
-  //       reject: err => {
-  //         console.log(err);
-  //       }
-  //     }
-  //   };
-  // }
   mounted() {
-    this.fs("clients");
+    var db = this.userdbdef.trash;
+    this.fs(db);
   }
 };
 </script>
