@@ -1,21 +1,21 @@
 <template>
-    <div>
-        <loader v-if="loading"> </loader>
-        <v-app v-if="!loading">
-            <template>
-                <template v-if="!loggedIn">
-                    <transition name="zoom">
-                        <login @loadingTrigger="loadingTrigger"></login>
-                    </transition>
-                </template>
-                <template v-if="loggedIn">
-                    <transition name="fade">
-                        <maincont @loadingTrigger="loadingTrigger" @logout="logout" :user="user"></maincont>
-                    </transition>
-                </template>
-            </template>
-        </v-app>
-    </div>
+  <div>
+    <loader v-if="loading"> </loader>
+    <v-app v-if="!loading">
+      <template>
+        <template v-if="!loggedIn">
+          <transition name="zoom">
+            <login @loadingTrigger="loadingTrigger"></login>
+          </transition>
+        </template>
+        <template v-if="loggedIn">
+          <transition name="fade">
+            <maincont @loadingTrigger="loadingTrigger" @logout="logout" :user="user"></maincont>
+          </transition>
+        </template>
+      </template>
+    </v-app>
+  </div>
 </template>
 
 <script>
@@ -64,19 +64,17 @@ export default {
           console.log("logged out");
           this.loading = false;
         });
+    },
+    fbUser() {
+      var $j = this;
+      firebase.auth().onAuthStateChanged(function(a) {
+        a ? ($j.user = a) : console.log("no user logged in");
+        $j.loading = !1;
+      });
     }
   },
   mounted() {
-    var self = this;
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        self.user = user;
-        self.loading = false;
-      } else {
-        console.log("no user logged in");
-        self.loading = false;
-      }
-    });
+    this.fbUser();
   }
 };
 </script>

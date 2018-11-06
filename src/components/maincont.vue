@@ -40,12 +40,14 @@ export default {
   },
   methods: {
     fs(i) {
-      this.loading = true;
-      this.$binding("tasks", firebase.firestore().collection(i)).then(tasks => {
-        console.log("got db"); // => __ob__: Observer
-        // this.$emit("loadingTrigger", false);
-        this.db.tasks = tasks;
-        this.loaded();
+      var a = this;
+      this.loading = !0;
+      this.$binding("tasks", firebase.firestore().collection(i)).then(function(
+        b
+      ) {
+        console.log("got db");
+        a.db.tasks = b;
+        a.loaded();
       });
     },
     loaded() {
