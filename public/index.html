@@ -26,13 +26,13 @@
   const user = netlifyIdentity.currentUser();
    const showapp = function () {
      const user = netlifyIdentity.currentUser();
-      if (this.user == !null) {
+      if (user == !null) {
         var element = document.getElementById("netlify");
         element.parentNode.removeChild(element);
         var b = document.getElementsByClassName("myapp");
         b.setAttribute("id", "app");
       }
-              console.log(this.user)
+              console.log(user)
       }
 window.onload = function() {
   showapp()
