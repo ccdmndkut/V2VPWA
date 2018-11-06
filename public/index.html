@@ -25,6 +25,7 @@
 <script>
   const user = netlifyIdentity.currentUser();
    const showapp = function () {
+     const user = netlifyIdentity.currentUser();
       if (this.user == !null) {
         var element = document.getElementById("netlify");
         element.parentNode.removeChild(element);
