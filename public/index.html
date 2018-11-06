@@ -22,10 +22,13 @@
   <div data-netlify-identity-menu></div>
   <div data-netlify-identity-button>Login with Netlify Identity</div>
   <div id="app"></div>
-
+<script>
+window.onload = function() {
+  netlifyIdentity.open();
+}
+</script>
 </body>
 <style>
-
 </style>
 
 </html>
