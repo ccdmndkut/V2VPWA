@@ -23,16 +23,20 @@
 
   <div class="myapp"></div>
 <script>
-    showapp = function () {
-              var element = document.getElementById("netlify");
-      element.parentNode.removeChild(element);
-         var b = document.getElementsByClassName("myapp");
-      b.setAttribute("id", "app");
+  const user = netlifyIdentity.currentUser();
+   const showapp = function () {
+      if (this.user == !null) {
+        var element = document.getElementById("netlify");
+        element.parentNode.removeChild(element);
+        var b = document.getElementsByClassName("myapp");
+        b.setAttribute("id", "app");
+      }
+              console.log(this.user)
       }
 window.onload = function() {
-  
+  showapp()
 }
-  netlifyIdentity.on('login', user => showapp());
+
 
 
 </script>
