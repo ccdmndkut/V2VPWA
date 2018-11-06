@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar app @logout="logout"> </navbar>
+    <navbar :loading='loading' app @logout="logout" @sentquery="makequery" :db="db"> </navbar>
     <v-content>
       <v-container fluid>
         <div v-if="loading" class="text-xs-center">
@@ -8,7 +8,7 @@
         </div>
         <template v-if="!loading">
           <div v-for="(item, i) in db.tasks" :key="i">
-            <listitem :loading="loading" :item="item"></listitem>
+            <listitem @deleteNote='deleteNote' :loading="loading" :item="item"></listitem>
           </div>
         </template>
       </v-container>
@@ -31,22 +31,23 @@ export default {
   props: ["user"],
   data() {
     return {
-      myemail: this.user.email,
-      loading: Boolean,
+      loading: true,
+      query: "",
       db: {
-        tasks: ""
+        tasks: "",
+        main: ""
       }
     };
   },
   methods: {
     fs(i) {
       var a = this;
-      this.loading = !0;
       this.$binding("tasks", firebase.firestore().collection(i)).then(function(
         b
       ) {
         console.log("got db");
         a.db.tasks = b;
+        a.db.main = b;
         a.loaded();
       });
     },
@@ -55,21 +56,51 @@ export default {
     },
     logout() {
       this.$emit("logout");
+    },
+    makequery(sentquery) {
+      this.query = sentquery;
+      this.searchFunc();
+    },
+    searchFunc() {
+      const result = this.db.main.filter(client => client.name === this.query);
+      result.sort(this.compareD);
+      this.db.tasks = result;
+    },
+    dateFunc() {
+      const result = this.db.main.filter(client => client.date === this.date);
+      result.sort(this.compareP);
+      this.db.tasks = result;
+    },
+    compareP: function(a, b) {
+      const nameA = a.priority;
+      const nameB = b.priority;
+      let comparison = 0;
+      if (nameA > nameB) {
+        comparison = 1;
+      } else if (nameA < nameB) {
+        comparison = -1;
+      }
+      return comparison;
+    },
+    deleteNote(item) {
+      console.log("deleted");
+      console.log(JSON.parse(JSON.stringify(item)));
+      // this.$firestore.tasks.doc(item[".key"]).delete();
     }
   },
   computed: {
-    dblength() {
-      return this.tasks.length;
+    currentUser() {
+      return this.user.email;
     },
+
     userdbdef() {
-      let user = this.user.email;
-      if (user == "chriscombs@vaclaims.net") {
+      if (this.currentUser == "chriscombs@vaclaims.net") {
         return {
           tasks: "tasks",
           client: "clients",
           trash: "trash"
         };
-      } else if (user == "denvercombs@vaclaims.net") {
+      } else if (this.currentUser == "denvercombs@vaclaims.net") {
         return {
           tasks: "denver",
           client: "clientsdlc",

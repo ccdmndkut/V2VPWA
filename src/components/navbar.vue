@@ -16,8 +16,11 @@
           <v-icon color="low" large>fiber_new</v-icon>
         </v-btn>
       </div>
-      <div id="mid">
-        <v-autocomplete id="searchBar" placeholder='Client Name' solo prepend-inner-icon="search" flat class="mx-3" @change="$emit('sentquery', newquery); clearQuery();" v-model="newquery" :items="names" item-text="name" :filter="customFilter"></v-autocomplete>
+      <div v-if="loading" id="mid">
+        <v-autocomplete id="searchBar" loading placeholder='Loading' solo prepend-inner-icon="search" flat class="mx-3" disabled></v-autocomplete>
+      </div>
+      <div v-if="!loading" id="mid">
+        <v-autocomplete id="searchBar" placeholder='Client Name' solo prepend-inner-icon="search" flat class="mx-3" @change="$emit('sentquery', newquery)" v-model="newquery" :items="names" item-text="name"></v-autocomplete>
       </div>
       <div id="right">
         <v-btn round color="vuegreen" dark flat small @click="cam">
@@ -34,15 +37,40 @@
 import firebase from "firebase";
 export default {
   name: "navbar",
+  props: ["db", "loading"],
   data() {
-    return {};
+    return {
+      newquery: ""
+    };
   },
   methods: {
     logout() {
       this.$emit("logout");
+    },
+    compare(a, b) {
+      const nameA = a.name;
+      const nameB = b.name;
+      let comparison = 0;
+      if (nameA > nameB) {
+        comparison = 1;
+      } else if (nameA < nameB) {
+        comparison = -1;
+      }
+      return comparison;
     }
   },
-  computed: {}
+  computed: {
+    names() {
+      var array = this.db.main;
+      const unique = [...new Set(array.map(item => item.name))];
+      var mapped = unique.map(item => ({
+        key: item,
+        name: item
+      }));
+      mapped.sort(this.compare);
+      return mapped;
+    }
+  }
 };
 </script>
 <style scoped>
