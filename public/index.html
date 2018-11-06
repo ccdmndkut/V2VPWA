@@ -19,20 +19,22 @@
   <noscript>
     <strong>We're sorry but v2vpwa doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
-  <div data-netlify-identity-menu></div>
-  <div data-netlify-identity-button>Login with Netlify Identity</div>
+  <div id="netlify" data-netlify-identity-menu></div>
+
   <div class="myapp"></div>
 <script>
+    showapp = function () {
+              var element = document.getElementById("netlify");
+      element.parentNode.removeChild(element);
+         var b = document.getElementsByClassName("myapp");
+      b.setAttribute("id", "app");
+      }
 window.onload = function() {
   netlifyIdentity.open();
 }
-  netlifyIdentity.on('login', user => console.log('login', user));
+  netlifyIdentity.on('login', user => showapp());
 
-  showapp = function() {
-    var b = document.getElementsByClassName("myapp");
 
-    b.setAttribute("id", "app");
-  }
 </script>
 </body>
 <style>
