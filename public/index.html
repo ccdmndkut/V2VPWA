@@ -21,11 +21,18 @@
   </noscript>
   <div data-netlify-identity-menu></div>
   <div data-netlify-identity-button>Login with Netlify Identity</div>
-  <div id="app"></div>
+  <div class="myapp"></div>
 <script>
 window.onload = function() {
   netlifyIdentity.open();
 }
+  netlifyIdentity.on('login', user => console.log('login', user));
+
+  showapp = function() {
+    var b = document.getElementsByClassName("myapp");
+
+    b.setAttribute("id", "app");
+  }
 </script>
 </body>
 <style>
