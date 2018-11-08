@@ -1,17 +1,19 @@
 <template>
-  <v-app id="body">
+  <v-app class="body">
     <v-content>
-      <div class="login-page">
+      <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page">
         <transition name="fade">
-          <div class="form">
-            <div class="login-form">
-              <div id="err">{{errM}}</div>
-              <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" placeholder="username" />
-              <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" v-model="password" type="password" placeholder="password" />
-              <!-- <button @click.prevent="$emit('fire')">login</button> -->
-              <button @click.prevent="login()">login</button>
+          <form>
+            <div class="form">
+              <div class="login-form">
+                <div id="err">{{errM}}</div>
+                <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" autocomplete="username"  placeholder="username"/>
+                <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+                <!-- <button @click.prevent="$emit('fire')">login</button> -->
+                <button @click.prevent="login()">login</button>
+              </div>
             </div>
-          </div>
+          </form>
         </transition>
       </div>
     </v-content>
@@ -23,16 +25,18 @@
 import firebase from "firebase";
 export default {
   name: "login",
+  props: ["loggedin", "user"],
   data() {
     return {
-      user: {},
       email: "chriscombs@vaclaims.net",
       password: "",
       errC: "",
       errM: "",
       isActive: false,
       isActiveb: false,
-      err: ""
+      err: "",
+      inactiveClass: "show",
+      activeClass: "hide"
     };
   },
   methods: {
@@ -49,16 +53,20 @@ export default {
         });
     },
     login() {
-      this.$emit("loadingTrigger", true);
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => console.log("logged in"));
+      this.$emit("login", this.email, this.password);
+     
     }
   },
-  computed: {},
-  created() {},
-  props: {}
+  computed: {
+    isActivec() {
+      if (this.user) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  created() {}
 };
 </script>
 <style scoped>
@@ -171,7 +179,7 @@ export default {
 .container .info span .fa {
   color: #ef3b3a;
 }
-#body {
+.body {
   background: #00787e; /* fallback for old browsers */
   background: -webkit-linear-gradient(right, #00787e, #00484b);
   background: -moz-linear-gradient(right, #00787e, #00484b);
@@ -181,5 +189,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+}
+.show {
+  display: block;
+}
+.hide {
+  display: none;
 }
 </style>
