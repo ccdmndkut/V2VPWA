@@ -65,9 +65,9 @@ export default {
     }
   },
   props: {
-    names: "",
-    types: "",
-    noteEdit: ""
+    names: ,
+    types: ,
+    noteEdit: 
   },
   data() {
     return {

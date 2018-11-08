@@ -2,10 +2,12 @@
   <div>
     <v-app>
       <template>
-        <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login>
+
+        <login v-bind:class="loggedin ? activeClass : inactiveClass" v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login>
+        <!-- <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login> -->
         <template v-if="this.loggedin==true">
           <transition name="fade">
-            <maincont  @logout="logout" :user="user"></maincont>
+            <maincont @logout="logout" :user="user"></maincont>
           </transition>
         </template>
       </template>
@@ -27,8 +29,10 @@ export default {
   },
   data() {
     return {
+      activeClass: "active",
+      inactiveClass: "notactive",
       scrollBar: "none",
-      user: "",
+      user: ""
       // loggedin: false
     };
   },
@@ -39,17 +43,19 @@ export default {
       } else {
         return false;
       }
-    },
+    }
   },
   methods: {
-     login(e,p) {      
+    login(e, p) {
       firebase
         .auth()
         .signInWithEmailAndPassword(e, p)
         .then(() => {
-          this.user = firebase.auth().currentUser;
-          console.log("logged in");
+          var storeduser = firebase.auth().currentUser.email;
+          sessionStorage.setItem("user", storeduser);
 
+          this.user = sessionStorage.getItem("user");
+          console.log("logged in as " + this.user);
         });
     },
     logout() {
@@ -58,33 +64,29 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          this.user = firebase.auth().currentUser;
           console.log("logged out");
+          sessionStorage.removeItem("user");
+          this.user = "";
           this.loggedin = false;
         });
     }
-    // fbUser() {
-    //   var $j = this;
-    //   firebase.auth().onAuthStateChanged(function(a) {
-    //     a ? ($j.user = a) : console.log("no user logged in");
-    //     $j.loading = !1;
-    //   });
-    // }
   },
   created() {
-    // console.log(firebase.auth().currentUser)
-    // this.user = firebase.auth().currentUser;
-    // var $j = this;
-    // firebase.auth().onAuthStateChanged(function(a) {
-    //   a ? ($j.user = a) : console.log("no user logged in");
-    //   $j.loggedin = false;
-    // });
+    var cu = sessionStorage.getItem("user");
+    this.user = cu;
   }
 };
 </script>
 <style>
+.notactive {
+  opacity: 1;
+  transition: opacity 3000ms;
+}
+.active {
+  transition: opacity 3000ms;
+  opacity: 0;
+}
 .bs::-webkit-scrollbar {
   display: none;
 }
 </style>
-

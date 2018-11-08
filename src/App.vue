@@ -1,8 +1,8 @@
 <template>
   <div>
-   <keep-alive>
-   <myapp></myapp>
-</keep-alive>
+
+    <myapp></myapp>
+
   </div>
 </template>
 
@@ -14,13 +14,11 @@ export default {
     myapp
   },
   data() {
-    return {
-    };
+    return {};
   },
-  computed: {
-  },
-  methods: { },
-  created() { }
+  computed: {},
+  methods: {},
+  created() {}
 };
 </script>
 <style>
@@ -28,4 +26,3 @@ export default {
   display: none;
 }
 </style>
-

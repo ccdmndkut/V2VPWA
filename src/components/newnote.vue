@@ -83,8 +83,8 @@ export default {
     }
   },
   props: {
-    names: "",
-    types: "",
+    names: ,
+    types: ,
     noteNew: {}
   },
   data() {

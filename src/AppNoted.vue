@@ -118,4 +118,3 @@ export default {
   transition: 1000ms;
 }
 </style>
-

@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     currentUser() {
-      return this.user.email;
+      return this.user;
     },
 
     userdbdef() {

@@ -18,8 +18,8 @@
 export default {
   name: "beta",
   props: {
-    db: "",
-    beta: ""
+    db: ,
+    beta: 
   },
   data() {
     return {

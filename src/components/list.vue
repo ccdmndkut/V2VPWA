@@ -139,8 +139,8 @@ export default {
   props: {
     isMobileDevice: Boolean,
     info: Boolean,
-    names: "",
-    types: "",
+    names: ,
+    types: ,
     dateFunc: {
       type: Object
     },

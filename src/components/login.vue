@@ -1,20 +1,20 @@
 <template>
   <v-app class="body">
     <v-content>
-      <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page">
-        <transition name="fade">
-          <form>
-            <div class="form">
-              <div class="login-form">
-                <div id="err">{{errM}}</div>
-                <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" autocomplete="username"  placeholder="username"/>
-                <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
-                <!-- <button @click.prevent="$emit('fire')">login</button> -->
-                <button @click.prevent="login()">login</button>
-              </div>
+      <!-- <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page"> -->
+      <div class="login-page">
+
+        <form>
+          <div class="form">
+            <div class="login-form">
+              <div id="err">{{errM}}</div>
+              <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" autocomplete="username" placeholder="username" />
+              <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+              <!-- <button @click.prevent="$emit('fire')">login</button> -->
+              <button @click.prevent="login()">login</button>
             </div>
-          </form>
-        </transition>
+          </div>
+        </form>
       </div>
     </v-content>
   </v-app>
@@ -34,9 +34,9 @@ export default {
       errM: "",
       isActive: false,
       isActiveb: false,
-      err: "",
-      inactiveClass: "show",
-      activeClass: "hide"
+      err: ""
+      // inactiveClass: "show",
+      // activeClass: "hide"
     };
   },
   methods: {
@@ -54,7 +54,6 @@ export default {
     },
     login() {
       this.$emit("login", this.email, this.password);
-     
     }
   },
   computed: {
@@ -71,6 +70,7 @@ export default {
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
 #err {
   position: absolute;
   top: 235px;
