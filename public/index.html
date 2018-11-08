@@ -12,35 +12,15 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/vue2-animate/dist/vue2-animate.min.css" />
-<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
 </head>
 
 <body id="ani" class="bs">
   <noscript>
     <strong>We're sorry but v2vpwa doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
-  <div id="netlify" data-netlify-identity-menu></div>
+  <div id="app"></div>
 
-  <div class="myapp"></div>
-<script>
-  const user = netlifyIdentity.currentUser();
-   const showapp = function () {
-     const user = netlifyIdentity.currentUser();
-      if (user == !null) {
-        var element = document.getElementById("netlify");
-        element.parentNode.removeChild(element);
-        var b = document.getElementsByClassName("myapp");
-        b.setAttribute("id", "app");
-      }
-              console.log(user)
-      }
-document.onload = function() {
-  showapp()
-}
-
-
-
-</script>
 </body>
 <style>
 </style>
