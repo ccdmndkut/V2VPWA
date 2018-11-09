@@ -1,29 +1,27 @@
 <template>
   <PoseTransition>
-
-    <mylogin v-if="!user">
-      <v-app class="body">
-
-        <v-content>
-          <!-- <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page"> -->
-          <div class="login-page">
-
+    <page v-if="!loggedin">
+      <mylogin v-if="!loggedin">
+        <v-app class="body">
+          <v-content>
+            <!-- <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page"> -->
             <form>
-              <div class="form">
-                <div class="login-form">
-                  <div id="err">{{errM}}</div>
-                  <input v-model="email" type="text" autocomplete="username" placeholder="username" />
-                  <input @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
-                  <!-- <button @click.prevent="$emit('fire')">login</button> -->
-                  <button @click.prevent="login()">login</button>
-                </div>
+              <div class="login-page">
+                <myform class="form">
+                  <div class="login-form">
+                    <div id="err">{{errM}}</div>
+                    <input v-model="email" type="text" autocomplete="username" placeholder="username" />
+                    <input @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+                    <!-- <button @click.prevent="$emit('fire')">login</button> -->
+                    <button @click.prevent="login()">login</button>
+                  </div>
+                </myform>
               </div>
             </form>
-          </div>
-        </v-content>
-
-      </v-app>
-    </mylogin>
+          </v-content>
+        </v-app>
+      </mylogin>
+    </page>
   </PoseTransition>
 </template>
 
@@ -47,13 +45,43 @@ export default {
     mylogin: posed.div({
       enter: {
         opacity: 1,
-        beforeChildren: true,
         transition: { duration: 200, ease: "linear" }
       },
       exit: {
         opacity: 0,
-        afterChildren: true,
         transition: { duration: 200, ease: "linear" }
+      }
+    }),
+    page: posed.div({
+      init: {
+        opacity: 0
+      },
+      enter: {
+        opacity: 1,
+        transition: { duration: 300, ease: "linear" }
+      },
+      exit: {
+        opacity: 0,
+        transition: { duration: 200, ease: "linear" }
+      }
+    }),
+    myform: posed.div({
+      hoverable: true,
+      hover: { scale: 1, borderRadius: "15px", opacity: 1 },
+
+      init: {
+        opacity: 0,
+        scale: 0,
+        borderRadius: "10px"
+      },
+      enter: {
+        scale: 1,
+        opacity: 1,
+        delay: 500
+      },
+      exit: {
+        opacity: 0,
+        scale: 0
       }
     })
   },

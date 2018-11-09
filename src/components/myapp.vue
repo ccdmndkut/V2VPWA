@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-app>
-      <login @login="login" :loggedin="loggedin" :user="user"></login>
-      <template v-if="this.loggedin==true">
+      <login v-if="!this.loggedin" @login="login" :loggedin="loggedin" :user="user"></login>
+      <div v-if="this.loggedin==true">
         <maincont @logout="logout" :user="user"></maincont>
-      </template>
+      </div>
 
     </v-app>
   </div>
