@@ -2,17 +2,18 @@
   <div>
     <v-app>
       <template>
-
-        <login v-bind:class="loggedin ? activeClass : inactiveClass" v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login>
-        <!-- <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login> -->
-        <template v-if="this.loggedin==true">
-          <transition name="fade">
+        <pose-transition>
+          <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login>
+          <!-- <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login> -->
+          <template v-if="this.loggedin==true">
             <maincont @logout="logout" :user="user"></maincont>
-          </transition>
-        </template>
+
+          </template>
+        </pose-transition>
+
       </template>
-    </v-app>
-  </div>
+</v-app>
+</div>
 </template>
 
 <script>
@@ -20,17 +21,17 @@ import firebase from "firebase";
 import firestore from "./firebaseInit";
 import login from "./login";
 import maincont from "./maincont";
+import { PoseTransition } from "vue-pose";
 
 export default {
   name: "myapp",
   components: {
     login,
-    maincont
+    maincont,
+    PoseTransition
   },
   data() {
     return {
-      activeClass: "active",
-      inactiveClass: "notactive",
       scrollBar: "none",
       user: ""
       // loggedin: false
@@ -78,14 +79,6 @@ export default {
 };
 </script>
 <style>
-.notactive {
-  opacity: 1;
-  transition: opacity 3000ms;
-}
-.active {
-  transition: opacity 3000ms;
-  opacity: 0;
-}
 .bs::-webkit-scrollbar {
   display: none;
 }

@@ -8,8 +8,8 @@
           <div class="form">
             <div class="login-form">
               <div id="err">{{errM}}</div>
-              <input v-bind:class="{ active: isActive }" @blur="isActive=false" @focus="isActive=true" v-model="email" type="text" autocomplete="username" placeholder="username" />
-              <input v-bind:class="{ active: isActiveb }" @blur="isActiveb=false" @focus="isActiveb=true" @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+              <input v-model="email" type="text" autocomplete="username" placeholder="username" />
+              <input @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
               <!-- <button @click.prevent="$emit('fire')">login</button> -->
               <button @click.prevent="login()">login</button>
             </div>
@@ -32,11 +32,7 @@ export default {
       password: "",
       errC: "",
       errM: "",
-      isActive: false,
-      isActiveb: false,
       err: ""
-      // inactiveClass: "show",
-      // activeClass: "hide"
     };
   },
   methods: {
@@ -109,10 +105,6 @@ export default {
   font-size: 14px;
   transition: 300ms;
 }
-.active {
-  border-radius: 25px;
-}
-
 .form button {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -141,9 +133,6 @@ export default {
 .form .message a {
   color: #4caf50;
   text-decoration: none;
-}
-.form .register-form {
-  display: none;
 }
 .container {
   position: relative;
@@ -189,11 +178,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
-}
-.show {
-  display: block;
-}
-.hide {
-  display: none;
 }
 </style>
