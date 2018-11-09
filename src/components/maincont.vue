@@ -110,6 +110,12 @@ export default {
     }
   },
   mounted() {
+    var query = firestore.collection("tasks");
+
+    query.get().then(querySnapshot => {
+  console.log(`Found ${querySnapshot.size} documents.`);
+});
+
     var db = this.userdbdef.trash;
     this.fs(db);
   }

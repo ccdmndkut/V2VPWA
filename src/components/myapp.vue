@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app>
-      <login v-if="!this.loggedin" @login="login" :loggedin="loggedin" :user="user"></login>
+      <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login>
       <div v-if="this.loggedin==true">
         <maincont @logout="logout" :user="user"></maincont>
       </div>
@@ -26,7 +26,7 @@ export default {
     return {
       scrollBar: "none",
       user: "",
-      loggedin: false
+      loggedin: true
     };
   },
   // computed: {

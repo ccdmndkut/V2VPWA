@@ -53,9 +53,7 @@ export default {
       }
     }),
     page: posed.div({
-      init: {
-        opacity: 0
-      },
+    
       enter: {
         opacity: 1,
         transition: { duration: 300, ease: "linear" }
@@ -66,7 +64,7 @@ export default {
       }
     }),
     myform: posed.div({
-      hoverable: true,
+      
       hover: { scale: 1, borderRadius: "15px", opacity: 1 },
 
       init: {
