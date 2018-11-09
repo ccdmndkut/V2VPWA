@@ -1,27 +1,34 @@
 <template>
-  <v-app class="body">
-    <v-content>
-      <!-- <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page"> -->
-      <div class="login-page">
+  <PoseTransition>
 
-        <form>
-          <div class="form">
-            <div class="login-form">
-              <div id="err">{{errM}}</div>
-              <input v-model="email" type="text" autocomplete="username" placeholder="username" />
-              <input @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
-              <!-- <button @click.prevent="$emit('fire')">login</button> -->
-              <button @click.prevent="login()">login</button>
-            </div>
+    <mylogin v-if="!user">
+      <v-app class="body">
+
+        <v-content>
+          <!-- <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page"> -->
+          <div class="login-page">
+
+            <form>
+              <div class="form">
+                <div class="login-form">
+                  <div id="err">{{errM}}</div>
+                  <input v-model="email" type="text" autocomplete="username" placeholder="username" />
+                  <input @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+                  <!-- <button @click.prevent="$emit('fire')">login</button> -->
+                  <button @click.prevent="login()">login</button>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-    </v-content>
-  </v-app>
+        </v-content>
 
+      </v-app>
+    </mylogin>
+  </PoseTransition>
 </template>
 
 <script>
+import posed, { PoseTransition } from "vue-pose";
 import firebase from "firebase";
 export default {
   name: "login",
@@ -34,6 +41,21 @@ export default {
       errM: "",
       err: ""
     };
+  },
+  components: {
+    PoseTransition,
+    mylogin: posed.div({
+      enter: {
+        opacity: 1,
+        beforeChildren: true,
+        transition: { duration: 200, ease: "linear" }
+      },
+      exit: {
+        opacity: 0,
+        afterChildren: true,
+        transition: { duration: 200, ease: "linear" }
+      }
+    })
   },
   methods: {
     logout() {
