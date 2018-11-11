@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoggedIn">
+  <div>
     <navbar @logoutEvent="$emit('logoutEvent')" :loading='loading' app @logout=" logout" @sentquery="makequery" :db="db"> </navbar>
     <v-content>
       <v-container fluid>
@@ -24,16 +24,15 @@ import listitem from "./listitem";
 
 export default {
   name: "maincont",
+  props: ["user"],
   components: {
     navbar,
     listitem
   },
   data() {
     return {
-      isLoggedIn: "",
       loading: true,
       query: "",
-      currentUser: "chriscombs@vaclaims.net",
       db: {
         tasks: "",
         main: ""
@@ -47,7 +46,6 @@ export default {
         b
       ) {
         console.log("got db");
-
         a.db.tasks = b;
         a.db.main = b;
         a.loaded();
@@ -90,16 +88,10 @@ export default {
       // this.$firestore.tasks.doc(item[".key"]).delete();
     }
   },
-  // watch: {
-  //   currentUser(newName) {
-  //     if (!newName) {
-  //       this.isLoggedIn = false;
-  //     } else {
-  //       this.isLoggedIn = true;
-  //     }
-  //   }
-  // },
   computed: {
+    currentUser() {
+      return this.user.email;
+    },
     userdbdef() {
       if (this.currentUser == "chriscombs@vaclaims.net") {
         return {
@@ -117,10 +109,18 @@ export default {
       }
     }
   },
+  updated() {
+    console.log("maincont.vue updated");
+  },
+  destroyed() {
+    console.log("maincont.vue destroyed");
+  },
   mounted() {
-    this.currentUser = window.sessionStorage.user;
+    // var useremail = firebase.auth().currentUser.email;
+    // this.currentUser = useremail;
     var db = this.userdbdef.trash;
     this.fs(db);
+    console.log("maincont.vue mounted");
   }
 };
 </script>

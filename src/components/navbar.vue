@@ -45,6 +45,9 @@ export default {
     };
   },
   methods: {
+    cam() {
+      console.log("cam pressed");
+    },
     logout() {
       this.isLoggedIn = false;
       firebase
@@ -78,7 +81,10 @@ export default {
     } else {
       this.isLoggedIn = false;
     }
-    console.warn("created navbar");
+    console.log("created navbar");
+  },
+  mounted() {
+    console.log("navbar mounted");
   },
   computed: {
     names() {

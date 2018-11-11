@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <login @login="login" v-if="!loggedIn"></login>
-    <!-- <myapp v-else></myapp> -->
-    <div v-else>
+    <myapp @logoutEvent="logout" :user="user" v-else></myapp>
+    <!-- <div v-else>
       <v-btn @click="logout()" color="success">text</v-btn>
-    </div>
+    </div> -->
   </v-app>
 </template>
 
@@ -35,6 +35,8 @@ export default {
         .signInWithEmailAndPassword(email, password)
         .then(() => {
           console.log("app.vue says login button pressed");
+          localStorage.setItem("loggedin", true);
+          self.loggedIn = true;
           self.checkLoginState();
         })
         .catch(function(error) {
@@ -48,8 +50,7 @@ export default {
         .auth()
         .signOut()
         .then(function() {
-          sessionStorage.clear();
-          console.info("logged out");
+          console.info("logged out from navbar");
           self.checkLoginState();
         })
         .catch(function(error) {
@@ -59,27 +60,33 @@ export default {
         });
     },
     checkLoginState() {
-      var user = firebase.auth().currentUser;
+      console.log("app.vue checking login state");
+      var user = this.user;
+      this.user = firebase.auth().currentUser;
       if (user) {
         this.loggedIn = true;
-        this.user = user;
       } else {
         this.loggedIn = false;
       }
     }
   },
+  mounted() {
+    console.info("app.vue mounted");
+    this.checkLoginState();
+  },
   created() {
     console.info("app.vue created");
-    var user = firebase.auth().currentUser;
+    this.checkLoginState();
+  },
+  updated() {
+    console.log("app.vue updated");
+    var user = this.user;
+
     if (user) {
       this.loggedIn = true;
-      this.user = user;
     } else {
       this.loggedIn = false;
     }
-  },
-  updated() {
-    console.log("updated");
   }
 
   // var checkUser = firebase.auth().currentUser;
@@ -121,6 +128,18 @@ export default {
 };
 </script>
 <style>
+.fade {
+  animation: 1.5s linear 0s infinite alternate fade;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .bs::-webkit-scrollbar {
   display: none;
 }

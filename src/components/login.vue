@@ -1,12 +1,11 @@
 <template>
   <v-content class="body ">
-    <form>
+    <form class="fade">
       <div class="form">
         <div id="err">{{loginError}}</div>
         <input required v-model="email" type="text" autocomplete="email" placeholder="username" />
         <input required @keydown.prevent.enter="login(email,  password)" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
         <button @click.prevent="login">login</button>
-        <button @click.prevent="logout()">log out</button>
 
       </div>
     </form>
@@ -116,7 +115,19 @@ export default {
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+.fade {
+  animation: 1.5s linear 0s normal forwards fade;
+}
 
+@keyframes fade {
+  from {
+    transform: translateX(300px);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 form {
   margin-top: 50vh;
   transform: translateY(-50%);
