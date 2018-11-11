@@ -1,4 +1,7 @@
 module.exports = {
+  // devServer: {
+  //   https: true
+  // },
   pages: {
     index: {
       entry: "src/main.js",

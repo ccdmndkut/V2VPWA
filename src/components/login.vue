@@ -1,6 +1,6 @@
 <template>
   <v-content class="body ">
-    <form class="fade">
+    <form v-bind:class="[leaving ? leavefade : fade]">
       <div class="form">
         <div id="err">{{loginError}}</div>
         <input required v-model="email" type="text" autocomplete="email" placeholder="username" />
@@ -23,7 +23,11 @@ export default {
       status: "",
       loginError: "",
       logoutError: "",
-      loginAttempt: ""
+      loginAttempt: "",
+      leaving: false,
+      leavefade: 'leavefade',
+      fade: 'fade',
+      form: "form"
     };
   },
   methods: {
@@ -46,10 +50,14 @@ export default {
           console.log(error.message);
         });
     },
-    login() {
+    logingtwo() {
       var email = this.email;
       var password = this.password;
-      this.$emit("login", email, password);
+      this.$emit("login", email, password)
+    },
+    login() {
+      this.leaving = true;
+      setTimeout(this.logingtwo(), 3000);
       // var self = this;
       // sessionStorage.clear();
       // firebase
@@ -118,20 +126,26 @@ export default {
 .fade {
   animation: 1.5s linear 0s normal forwards fade;
 }
+.leavefade {
+  animation: 1.5s linear 0s normal backwards fade;
+}
 
 @keyframes fade {
   from {
-    transform: translateX(300px);
+    transform: translateX(100vw) translateY(-50%);
     opacity: 0;
   }
   to {
     opacity: 1;
+    transform: translateY(-50%);
   }
 }
+
 form {
   margin-top: 50vh;
-  transform: translateY(-50%);
+  /* transform: translateY(-50%); */
 }
+
 #err {
   position: absolute;
   bottom: 5px;
