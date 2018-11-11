@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <navbar :loading='loading' app @logout="logout" @sentquery="makequery" :db="db"> </navbar>
+  <div v-if="isLoggedIn">
+    <navbar @logoutEvent="$emit('logoutEvent')" :loading='loading' app @logout=" logout" @sentquery="makequery" :db="db"> </navbar>
     <v-content>
       <v-container fluid>
         <div v-if="loading" class="text-xs-center">
@@ -28,11 +28,12 @@ export default {
     navbar,
     listitem
   },
-  props: ["user"],
   data() {
     return {
+      isLoggedIn: "",
       loading: true,
       query: "",
+      currentUser: "chriscombs@vaclaims.net",
       db: {
         tasks: "",
         main: ""
@@ -46,6 +47,7 @@ export default {
         b
       ) {
         console.log("got db");
+
         a.db.tasks = b;
         a.db.main = b;
         a.loaded();
@@ -88,11 +90,16 @@ export default {
       // this.$firestore.tasks.doc(item[".key"]).delete();
     }
   },
+  // watch: {
+  //   currentUser(newName) {
+  //     if (!newName) {
+  //       this.isLoggedIn = false;
+  //     } else {
+  //       this.isLoggedIn = true;
+  //     }
+  //   }
+  // },
   computed: {
-    currentUser() {
-      return this.user;
-    },
-
     userdbdef() {
       if (this.currentUser == "chriscombs@vaclaims.net") {
         return {
@@ -100,7 +107,8 @@ export default {
           client: "clients",
           trash: "trash"
         };
-      } else if (this.currentUser == "denvercombs@vaclaims.net") {
+      }
+      if (this.currentUser == "denvercombs@vaclaims.net") {
         return {
           tasks: "denver",
           client: "clientsdlc",
@@ -110,12 +118,7 @@ export default {
     }
   },
   mounted() {
-    var query = firestore.collection("tasks");
-
-    query.get().then(querySnapshot => {
-  console.log(`Found ${querySnapshot.size} documents.`);
-});
-
+    this.currentUser = window.sessionStorage.user;
     var db = this.userdbdef.trash;
     this.fs(db);
   }

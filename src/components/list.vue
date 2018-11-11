@@ -33,12 +33,10 @@
         <v-toolbar-title>
 
           <v-layout justify-center>
-       
-              <v-chip @click.stop="$emit('clientInfo', item)" class='elevation-1 px-2 title text-truncate' color="white" text-color="vueblue">
-                {{item.name}}
-              </v-chip>
-            
-       
+
+            <v-chip @click.stop="$emit('clientInfo', item)" class='elevation-1 px-2 title text-truncate' color="white" text-color="vueblue">
+              {{item.name}}
+            </v-chip>
 
           </v-layout>
 
@@ -134,7 +132,11 @@ export default {
       var mynote = this.item.notes;
       var stringer = JSON.stringify(mynote);
       return JSON.parse(stringer);
-    }
+    },
+  },
+  mounted() {
+      console.timeEnd("login");
+console.log('mounted list')
   },
   props: {
     isMobileDevice: Boolean,

@@ -1,5 +1,4 @@
 <template>
-
   <v-toolbar height="70" app fixed color="vueblue">
     <div id="grid">
       <div id="left">
@@ -26,7 +25,7 @@
         <v-btn round color="vuegreen" dark flat small @click="cam">
           cam
         </v-btn>
-        <v-btn round color="vuegreen" dark flat small @click="logout">
+        <v-btn round color="vuegreen" dark flat small @click="$emit('logoutEvent')">
           Logout </v-btn>
       </div>
     </div>
@@ -40,12 +39,25 @@ export default {
   props: ["db", "loading"],
   data() {
     return {
-      newquery: ""
+      newquery: "",
+      isLoggedIn: "",
+      user: ""
     };
   },
   methods: {
     logout() {
-      this.$emit("logout");
+      this.isLoggedIn = false;
+      firebase
+        .auth()
+        .signOut()
+        .then(function() {
+          window.sessionStorage.clear();
+          console.log("logged out");
+        })
+        .catch(function(error) {
+          console.log(error);
+          // An error happened.
+        });
     },
     compare(a, b) {
       const nameA = a.name;
@@ -58,6 +70,15 @@ export default {
       }
       return comparison;
     }
+  },
+  created() {
+    this.user = window.sessionStorage.user;
+    if (this.user) {
+      this.isLoggedIn = true;
+    } else {
+      this.isLoggedIn = false;
+    }
+    console.warn("created navbar");
   },
   computed: {
     names() {

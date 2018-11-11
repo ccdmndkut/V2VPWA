@@ -193,7 +193,7 @@ export default {
     };
   },
   created() {
-    console.warn("created");
+    console.warn("created testinginfo");
   },
   computed: {
     clientInfo() {

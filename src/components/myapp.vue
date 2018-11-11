@@ -1,34 +1,60 @@
 <template>
   <div>
-    <v-app>
-      <login v-if="this.loggedin==false" @login="login" :loggedin="loggedin" :user="user"></login>
-      <div v-if="this.loggedin==true">
-        <maincont @logout="logout" :user="user"></maincont>
-      </div>
 
-    </v-app>
+    <!-- <maincont v-else @logoutEvent='logoutEvent()'></maincont> -->
   </div>
 </template>
 
 <script>
-import firebase from "firebase";
-import firestore from "./firebaseInit";
+// import maincont from "./maincont";
 import maincont from "./maincont";
-import login from "./login";
 
 export default {
   name: "myapp",
   components: {
-    login,
     maincont
+    // maincont
   },
+
   data() {
     return {
-      scrollBar: "none",
-      user: "",
-      loggedin: true
+      scrollBar: "none"
     };
   },
+  mounted() {
+    console.log("myapp.vue mounted");
+  },
+  watch: {
+    // user(newName) {
+    //   if (!newName) {
+    //     this.isLoggedIn = false;
+    //   } else {
+    //     this.isLoggedIn = true;
+    //   }
+    // }
+  },
+  methods: {
+    logoutEvent() {
+      console.log("got event");
+      sessionStorage.clear();
+      this.user = sessionStorage.user;
+    },
+    loginEvent() {
+      // alert("myapp.vue says login event from login.vue");
+      this.user = sessionStorage.user;
+    }
+  },
+  created() {
+    // this.isLoggedIn = sessionStorage.getItem("userloggedin");
+    console.log("created my app");
+    // this.user = window.sessionStorage.user;
+    // if (this.user) {
+    //   this.isLoggedIn = true;
+    //   this.user = window.sessionStorage.user;
+    // } else {
+    //   this.isLoggedIn = false;
+    // }
+  }
   // computed: {
   //   loggedinold() {
   //     if (this.user) {
@@ -38,44 +64,6 @@ export default {
   //     }
   //   }
   // },
-  methods: {
-    login(e, p) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(e, p)
-        .then(() => {
-          var storeduser = firebase.auth().currentUser.email;
-          window.sessionStorage.setItem("user", storeduser);
-          this.user = storeduser;
-          console.log("logged in as " + this.user);
-          if (this.user) {
-            this.loggedin = true;
-          }
-        });
-    },
-    logout() {
-      this.loading = true;
-      this.loggedin = false;
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          console.log("logged out");
-          sessionStorage.removeItem("user");
-          this.user = "";
-          this.loggedin = false;
-        });
-    }
-  },
-  mounted() {
-    if (this.user) {
-      console.log("user true");
-      this.loggedin = true;
-    } else {
-      console.log("user false");
-      this.loggedin = false;
-    }
-  }
 };
 </script>
 <style>

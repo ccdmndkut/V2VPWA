@@ -1,123 +1,129 @@
 <template>
-  <PoseTransition>
-    <page v-if="!loggedin">
-      <mylogin v-if="!loggedin">
-        <v-app class="body">
-          <v-content>
-            <!-- <div v-bind:class="isActivec ? activeClass : inactiveClass" class="login-page"> -->
-            <form>
-              <div class="login-page">
-                <myform class="form">
-                  <div class="login-form">
-                    <div id="err">{{errM}}</div>
-                    <input v-model="email" type="text" autocomplete="username" placeholder="username" />
-                    <input @keydown.enter="login()" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
-                    <!-- <button @click.prevent="$emit('fire')">login</button> -->
-                    <button @click.prevent="login()">login</button>
-                  </div>
-                </myform>
-              </div>
-            </form>
-          </v-content>
-        </v-app>
-      </mylogin>
-    </page>
-  </PoseTransition>
-</template>
+  <v-content class="body ">
+    <form>
+      <div class="form">
+        <div id="err">{{loginError}}</div>
+        <input required v-model="email" type="text" autocomplete="email" placeholder="username" />
+        <input required @keydown.prevent.enter="login(email,  password)" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+        <button @click.prevent="login">login</button>
+        <button @click.prevent="logout()">log out</button>
 
+      </div>
+    </form>
+  </v-content>
+</template>
 <script>
-import posed, { PoseTransition } from "vue-pose";
 import firebase from "firebase";
 export default {
   name: "login",
-  props: ["loggedin", "user"],
   data() {
     return {
-      email: "chriscombs@vaclaims.net",
+      email: "",
       password: "",
-      errC: "",
-      errM: "",
-      err: ""
+      isLoggedIn: false,
+      status: "",
+      loginError: "",
+      logoutError: "",
+      loginAttempt: ""
     };
   },
-  components: {
-    PoseTransition,
-    mylogin: posed.div({
-      enter: {
-        opacity: 1,
-        transition: { duration: 200, ease: "linear" }
-      },
-      exit: {
-        opacity: 0,
-        transition: { duration: 200, ease: "linear" }
-      }
-    }),
-    page: posed.div({
-    
-      enter: {
-        opacity: 1,
-        transition: { duration: 300, ease: "linear" }
-      },
-      exit: {
-        opacity: 0,
-        transition: { duration: 200, ease: "linear" }
-      }
-    }),
-    myform: posed.div({
-      
-      hover: { scale: 1, borderRadius: "15px", opacity: 1 },
-
-      init: {
-        opacity: 0,
-        scale: 0,
-        borderRadius: "10px"
-      },
-      enter: {
-        scale: 1,
-        opacity: 1,
-        delay: 500
-      },
-      exit: {
-        opacity: 0,
-        scale: 0
-      }
-    })
-  },
   methods: {
+    setToken() {
+      var self = this;
+      var user = firebase.auth().currentUser;
+
+      user
+        .getIdToken(/* forceRefresh */ true)
+        .then(function(idToken) {
+          sessionStorage.setItem("token", idToken);
+          console.log("login.vue says token is " + idToken);
+          var email = firebase.auth().currentUser.email;
+          sessionStorage.setItem("email", email);
+          console.log("logged in as" + email);
+        })
+        .catch(function(error) {
+          // if the request fails, remove any possible user token if possible
+          self.loginError = error.message;
+          console.log(error.message);
+        });
+    },
+    login() {
+      var email = this.email;
+      var password = this.password;
+      this.$emit("login", email, password);
+      // var self = this;
+      // sessionStorage.clear();
+      // firebase
+      //   .auth()
+      //   .signInWithEmailAndPassword(e, p)
+      //   .then(() => {
+      //     self.loginError = "";
+      //     var uid = firebase.auth().currentUser.uid;
+      //     var email = firebase.auth().currentUser.email;
+      //     localStorage.setItem("uid", uid);
+      //     localStorage.setItem("email", email);
+
+      //     console.log("login.vue says login button pressed");
+      //     // self.$emit("loginEvent");
+      //   })
+      //   .catch(function(error) {
+      //     // sessionStorage.clear();
+      //     self.loginError = error.message;
+      //     console.log(error.message);
+      //   });
+    },
     logout() {
+      var self = this;
       firebase
         .auth()
         .signOut()
         .then(function() {
-          alert("logged out");
+          sessionStorage.clear();
+          console.info("logged out");
         })
         .catch(function(error) {
-          this.err = error;
+          self.logoutError = error;
+          console.error(error);
           // An error happened.
         });
-    },
-    login() {
-      this.$emit("login", this.email, this.password);
     }
   },
-  computed: {
-    isActivec() {
-      if (this.user) {
-        return true;
+  watch: {
+    loginAttempt() {
+      var token = sessionStorage.getItem("user-token");
+      if (token) {
+        var status = true;
+        this.status = [token, status];
       } else {
-        return false;
+        token = "";
+        status = false;
+        this.status = [token, status];
       }
     }
   },
-  created() {}
+  computed: {},
+  created() {
+    var currUser = sessionStorage.user;
+    this.user = currUser;
+    this.loginAttempt = false;
+    if (this.user) {
+      this.isLoggedIn = true;
+    } else {
+      this.isLoggedIn = false;
+    }
+  }
 };
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
+form {
+  margin-top: 50vh;
+  transform: translateY(-50%);
+}
 #err {
   position: absolute;
-  top: 235px;
+  bottom: 5px;
   color: red;
 }
 #email {
@@ -131,7 +137,6 @@ export default {
   margin: auto;
 }
 .form {
-  position: relative;
   z-index: 1;
   background: #ffffff;
   max-width: 360px;
@@ -217,6 +222,7 @@ export default {
   color: #ef3b3a;
 }
 .body {
+  height: 100vh;
   background: #00787e; /* fallback for old browsers */
   background: -webkit-linear-gradient(right, #00787e, #00484b);
   background: -moz-linear-gradient(right, #00787e, #00484b);
