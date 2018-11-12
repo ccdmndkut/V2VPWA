@@ -28,11 +28,7 @@ export default {
       user: ""
     };
   },
-  computed: {
-    currentUser() {
-      return firebase.auth().currentUser.email;
-    }
-  },
+
   methods: {
     login(email, password) {
       console.log(email);
@@ -43,7 +39,7 @@ export default {
         .then(() => {
           console.log("app.vue says login button pressed");
           localStorage.setItem("loggedin", true);
-          setTimeout(self.checkLoginState, 2000);
+          // self.checkLoginState;
         })
         .catch(function(error) {
           self.loginError = error.message;
@@ -58,7 +54,7 @@ export default {
         .then(function() {
           console.info("logged out from navbar");
           console.log("timeout start");
-          setTimeout(self.checkLoginState, 2000);
+          // self.checkLoginState;
         })
         .catch(function(error) {
           self.logoutError = error;
@@ -68,7 +64,7 @@ export default {
     },
     checkLoginState() {
       console.log("app.vue checking login state");
-      this.user = firebase.auth().currentUser;
+      this.user = this.currentUser;
       var user = this.user;
       if (user) {
         console.log("checkloginstate found true");
@@ -80,31 +76,35 @@ export default {
     }
   },
   mounted() {
-    if (this.currentUser) {
-      this.user = this.currentUser;
-      this.loggedIn = true;
-      console.log("app.vue updated method checked user value and found true");
-    } else {
-      this.loggedIn = false;
-      console.log("app.vue updated method checked user value and found false");
-    }
     console.info("app.vue mounted");
-    // this.checkLoginState;
+    var currentUser = firebase.auth().currentUser;
+    if (currentUser !== null && typeof currentUser === "object") {
+      this.user = currentUser;
+      this.loggedIn = true;
+    } else {
+      console.log("no user found");
+    }
   },
   created() {
     console.info("app.vue created");
-    this.checkLoginState;
-  },
-  updated() {
-    this.checkLoginState;
-    console.log("app.vue updated");
-    var user = this.user;
-    if (user) {
+    var currentUser = firebase.auth().currentUser;
+    if (currentUser !== null && typeof currentUser === "object") {
+      this.user = currentUser;
       this.loggedIn = true;
-      console.log("app.vue updated method checked user value and found true");
     } else {
-      this.loggedIn = false;
-      console.log("app.vue updated method checked user value and found false");
+      console.log("no user found");
+    }
+  },
+
+  updated() {
+    // this.checkLoginState;
+    console.log("app.vue updated");
+    var currentUser = firebase.auth().currentUser;
+    if (currentUser !== null && typeof currentUser === "object") {
+      this.user = currentUser;
+      this.loggedIn = true;
+    } else {
+      console.log("no user found");
     }
   }
 
