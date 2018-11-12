@@ -18,6 +18,7 @@ export default {
       loggedIn: false
     };
   },
+  computed: {},
   methods: {
     login(email, password) {
       this.loggedIn = true;

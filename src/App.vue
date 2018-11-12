@@ -28,7 +28,11 @@ export default {
       user: ""
     };
   },
-  computed: {},
+  computed: {
+    currentUser() {
+      return firebase.auth().currentUser.email;
+    }
+  },
   methods: {
     login(email, password) {
       console.log(email);
@@ -76,6 +80,14 @@ export default {
     }
   },
   mounted() {
+    if (this.currentUser) {
+      this.user = this.currentUser;
+      this.loggedIn = true;
+      console.log("app.vue updated method checked user value and found true");
+    } else {
+      this.loggedIn = false;
+      console.log("app.vue updated method checked user value and found false");
+    }
     console.info("app.vue mounted");
     // this.checkLoginState;
   },
@@ -84,6 +96,7 @@ export default {
     this.checkLoginState;
   },
   updated() {
+    this.checkLoginState;
     console.log("app.vue updated");
     var user = this.user;
     if (user) {
