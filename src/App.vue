@@ -1,7 +1,10 @@
 <template>
   <v-app>
-    <login @login="login" v-if="!loggedIn"></login>
-    <myapp @logoutEvent="logout" :user="user" v-else></myapp>
+
+    <myapp v-if="loggedIn==true" @logoutEvent="logout" :user="user"></myapp>
+    <transition appear name="fade">
+      <login @login="login" v-if="!user"></login>
+    </transition>
     <!-- <div v-else>
       <v-btn @click="logout()" color="success">text</v-btn>
     </div> -->
@@ -36,8 +39,7 @@ export default {
         .then(() => {
           console.log("app.vue says login button pressed");
           localStorage.setItem("loggedin", true);
-          self.loggedIn = true;
-          self.checkLoginState();
+          setTimeout(self.checkLoginState, 2000);
         })
         .catch(function(error) {
           self.loginError = error.message;
@@ -51,7 +53,8 @@ export default {
         .signOut()
         .then(function() {
           console.info("logged out from navbar");
-          self.checkLoginState();
+          console.log("timeout start");
+          setTimeout(self.checkLoginState, 2000);
         })
         .catch(function(error) {
           self.logoutError = error;
@@ -61,31 +64,34 @@ export default {
     },
     checkLoginState() {
       console.log("app.vue checking login state");
-      var user = this.user;
       this.user = firebase.auth().currentUser;
+      var user = this.user;
       if (user) {
+        console.log("checkloginstate found true");
         this.loggedIn = true;
       } else {
+        console.log("checkloginstate found false");
         this.loggedIn = false;
       }
     }
   },
   mounted() {
     console.info("app.vue mounted");
-    this.checkLoginState();
+    // this.checkLoginState;
   },
   created() {
     console.info("app.vue created");
-    this.checkLoginState();
+    this.checkLoginState;
   },
   updated() {
     console.log("app.vue updated");
     var user = this.user;
-
     if (user) {
       this.loggedIn = true;
+      console.log("app.vue updated method checked user value and found true");
     } else {
       this.loggedIn = false;
+      console.log("app.vue updated method checked user value and found false");
     }
   }
 
@@ -128,18 +134,21 @@ export default {
 };
 </script>
 <style>
-.fade {
-  animation: 1.5s linear 0s infinite alternate fade;
+.fade-enter {
+  filter: grayscale(1);
+  opacity: 0;
+}
+.fade-leave-to {
+  filter: grayscale(1);
+}
+/* .fade-leave,
+.for-enter-to {
+} */
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 2000ms;
 }
 
-@keyframes fade {
-  from {
-    opacity: 0.5;
-  }
-  to {
-    opacity: 1;
-  }
-}
 .bs::-webkit-scrollbar {
   display: none;
 }
