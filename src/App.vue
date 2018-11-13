@@ -1,9 +1,8 @@
 <template>
   <v-app>
-
-    <myapp v-if="loggedIn==true" @logoutEvent="logout" :user="user"></myapp>
+    <myapp v-if="loggedIn" @logoutEvent="logout" :user="user"></myapp>
     <transition appear name="fade">
-      <login @login="login" v-if="!user"></login>
+      <login :loginError="loginError" :loggedIn="loggedIn" @login="login" v-if="!loggedIn"></login>
     </transition>
     <!-- <div v-else>
       <v-btn @click="logout()" color="success">text</v-btn>
@@ -18,32 +17,49 @@ import login from "./components/login";
 
 export default {
   name: "App",
+  localStorage: {
+    lsUser: {
+      type: Object
+    },
+    lsLoggedIn: {
+      type: Boolean
+    }
+  },
   components: {
     myapp,
     login
   },
   data() {
     return {
-      loggedIn: Boolean,
-      user: ""
+      user: {},
+      loginError: String
     };
   },
-
+  computed: {
+    loggedIn() {
+      let checker = Object.keys(this.user).length;
+      if (checker === 0) {
+        return false;
+      }
+      if (checker > 0) {
+        return true;
+      }
+    }
+  },
   methods: {
     login(email, password) {
-      console.log(email);
       var self = this;
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          console.log("app.vue says login button pressed");
-          localStorage.setItem("loggedin", true);
-          // self.checkLoginState;
+          var user = firebase.auth().currentUser;
+          self.$localStorage.set("lsLoggedIn", true);
+          this.user = self.$localStorage.set("lsUser", user);
         })
         .catch(function(error) {
-          self.loginError = error.message;
-          console.log(error.message);
+          self.loginError = error;
+          return;
         });
     },
     logout() {
@@ -53,59 +69,32 @@ export default {
         .signOut()
         .then(function() {
           console.info("logged out from navbar");
-          console.log("timeout start");
-          // self.checkLoginState;
+          self.$localStorage.remove("lsUser");
+          self.user = {};
         })
         .catch(function(error) {
           self.logoutError = error;
-          console.error(error);
-          // An error happened.
+          self.$localStorage.remove("lsUser");
+          self.user = {};
+          console.error(error.message);
         });
-    },
-    checkLoginState() {
-      console.log("app.vue checking login state");
-      this.user = this.currentUser;
-      var user = this.user;
-      if (user) {
-        console.log("checkloginstate found true");
-        this.loggedIn = true;
-      } else {
-        console.log("checkloginstate found false");
-        this.loggedIn = false;
-      }
     }
   },
   mounted() {
     console.info("app.vue mounted");
-    var currentUser = firebase.auth().currentUser;
-    if (currentUser !== null && typeof currentUser === "object") {
-      this.user = currentUser;
-      this.loggedIn = true;
-    } else {
-      console.log("no user found");
-    }
+    this.loggedIn = this.$localStorage.get("lsLoggedIn");
+    this.user = this.$localStorage.get("lsUser");
   },
   created() {
-    console.info("app.vue created");
-    var currentUser = firebase.auth().currentUser;
-    if (currentUser !== null && typeof currentUser === "object") {
-      this.user = currentUser;
-      this.loggedIn = true;
-    } else {
-      console.log("no user found");
-    }
+    // console.info("app.vue created");
+    // this.loggedIn = this.$localStorage.get("lsLoggedIn");
+    // this.user = this.$localStorage.get("lsUser");
   },
 
   updated() {
-    // this.checkLoginState;
-    console.log("app.vue updated");
-    var currentUser = firebase.auth().currentUser;
-    if (currentUser !== null && typeof currentUser === "object") {
-      this.user = currentUser;
-      this.loggedIn = true;
-    } else {
-      console.log("no user found");
-    }
+    // console.log("app.vue updated");
+    // this.loggedIn = this.$localStorage.get("lsLoggedIn");
+    // this.user = this.$localStorage.get("lsUser");
   }
 
   // var checkUser = firebase.auth().currentUser;

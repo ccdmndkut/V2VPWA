@@ -1,96 +1,79 @@
 <template>
   <form>
-    <div class="form">
-      <div id="err">{{loginError}}</div>
-      <input required v-model="email" type="text" autocomplete="email" placeholder="username" />
+    <div :class="[clearedError ? bwoff :  bw]" class="form">
+      <div :class="[clearedError ? erroff : err ]" id="err">{{myerr}}</div>
+      <input @mousedown="clearError" required v-model="email" type="text" autocomplete="email" placeholder="username" />
       <input required @keydown.prevent.enter="login(email,  password)" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
       <button @click.prevent="login">login</button>
     </div>
   </form>
 </template>
 <script>
-import firebase from "firebase";
 export default {
   name: "loginform",
+  props: ["loginError"],
   data() {
     return {
       email: "",
       password: "",
-      isLoggedIn: false,
-      status: "",
-      loginError: "",
-      logoutError: "",
-      loginAttempt: "",
-      leaving: false,
-      leavefade: "leavefade",
-      fade: "fade",
-      form: "form"
+      form: "form",
+      clearedError: true,
+      err: "err",
+      erroff: "erroff",
+      bw: "bw",
+      bwoff: "bwoff",
+      myerr: ""
     };
   },
+  computed: {
+    loginerr() {
+      return this.loginError.message;
+    }
+  },
   methods: {
-    setToken() {
-      var self = this;
-      var user = firebase.auth().currentUser;
-      user
-        .getIdToken(/* forceRefresh */ true)
-        .then(function(idToken) {
-          sessionStorage.setItem("token", idToken);
-          console.log("login.vue says token is " + idToken);
-          var email = firebase.auth().currentUser.email;
-          sessionStorage.setItem("email", email);
-          console.log("logged in as" + email);
-        })
-        .catch(function(error) {
-          // if the request fails, remove any possible user token if possible
-          self.loginError = error.message;
-          console.log(error.message);
-        });
+    clearError() {
+      this.clearedError = true;
+      this.myerr = "";
     },
     login() {
       var email = this.email;
       var password = this.password;
       this.$emit("login", email, password);
+      this.password = "";
+      this.email = "";
+      this.clearedError = false;
+      this.myerr = this.loginerr;
     }
   },
-  watch: {
-    loginAttempt() {
-      var token = sessionStorage.getItem("user-token");
-      if (token) {
-        var status = true;
-        this.status = [token, status];
-      } else {
-        token = "";
-        status = false;
-        this.status = [token, status];
-      }
-    }
-  },
-  computed: {},
-  created() {
-    var currUser = sessionStorage.user;
-    this.user = currUser;
-    this.loginAttempt = false;
-    if (this.user) {
-      this.isLoggedIn = true;
-    } else {
-      this.isLoggedIn = false;
-    }
-  }
+  watch: {},
+  created() {}
 };
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
+.bw {
+  filter: grayscale(1);
+  filter: opacity(0.8);
+}
+.bwoff {
+  filter: grayscale(0);
+}
 form {
   margin-top: 50vh;
   transform: translateY(-50%);
 }
-
-#err {
+.err {
   position: absolute;
   bottom: 5px;
   color: red;
+  word-wrap: break-word;
+  width: 270px;
 }
+
+.erroff {
+  display: none;
+}
+
 #email {
   position: absolute;
   top: 250px;

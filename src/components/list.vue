@@ -135,7 +135,6 @@ export default {
     },
   },
   mounted() {
-      console.timeEnd("login");
 console.log('mounted list')
   },
   props: {

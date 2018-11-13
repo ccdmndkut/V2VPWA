@@ -1,32 +1,28 @@
 <template>
   <v-content class="body ">
     <transition appear name="form">
-      <loginform v-if="!loggedIn" @login="login" />
+      <loginform :loginError="loginError" v-if="!loggedIn" @login="login" />
     </transition>
   </v-content>
 </template>
 <script>
-import firebase from "firebase";
 import loginform from "./loginform";
 export default {
   name: "login",
+  props: ["loginError", "loggedIn"],
   components: {
     loginform
   },
   data() {
-    return {
-      loggedIn: false
-    };
+    return {};
   },
   computed: {},
   methods: {
     login(email, password) {
-      this.loggedIn = true;
       this.$emit("login", email, password);
     }
   },
-  watch: {},
-  computed: {}
+  watch: {}
 };
 </script>
 <style scoped>
