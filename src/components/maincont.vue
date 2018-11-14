@@ -1,20 +1,34 @@
 <template>
   <div>
-    <navbar @logoutEvent="$emit('logoutEvent')" :loading='loading' app @logout=" logout" @sentquery="makequery" :db="db"> </navbar>
+    <navbar
+      @logoutEvent="$emit('logoutEvent');"
+      :loading="loading"
+      app
+      @logout="logout"
+      @sentquery="makequery"
+      :db="db"
+    >
+    </navbar>
     <v-content>
       <v-container fluid>
         <div v-if="loading" class="text-xs-center">
-          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
         </div>
         <template v-if="!loading">
           <div v-for="(item, i) in db.tasks" :key="i">
-            <listitem @deleteNote='deleteNote' :loading="loading" :item="item"></listitem>
+            <listitem
+              @deleteNote="deleteNote"
+              :loading="loading"
+              :item="item"
+            ></listitem>
           </div>
         </template>
       </v-container>
     </v-content>
   </div>
-
 </template>
 <script>
 import firebase from "firebase";
@@ -124,5 +138,4 @@ export default {
   }
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

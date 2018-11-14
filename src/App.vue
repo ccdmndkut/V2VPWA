@@ -1,12 +1,7 @@
 <template>
   <v-app>
     <myapp v-if="loggedIn" @logoutEvent="logout" :user="user"></myapp>
-    <transition appear name="fade">
-      <login :loginError="loginError" :loggedIn="loggedIn" @login="login" v-if="!loggedIn"></login>
-    </transition>
-    <!-- <div v-else>
-      <v-btn @click="logout()" color="success">text</v-btn>
-    </div> -->
+    <login :loginError="loginError" :loggedIn="loggedIn" @login="login" v-if="!loggedIn"></login>
   </v-app>
 </template>
 
@@ -86,53 +81,10 @@ export default {
     this.user = this.$localStorage.get("lsUser");
   },
   created() {
-    // console.info("app.vue created");
-    // this.loggedIn = this.$localStorage.get("lsLoggedIn");
-    // this.user = this.$localStorage.get("lsUser");
+    console.log(this.$store.state.db);
   },
 
-  updated() {
-    // console.log("app.vue updated");
-    // this.loggedIn = this.$localStorage.get("lsLoggedIn");
-    // this.user = this.$localStorage.get("lsUser");
-  }
-
-  // var checkUser = firebase.auth().currentUser;
-
-  // var session = sessionStorage.userloggedin;
-  // if (checkUser) {
-  //   this.user = firebase.auth().currentUser;
-  //   this.email = this.user.email;
-  //   sessionStorage.setItem("email", this.email);
-  //   sessionStorage.setItem("userloggedin", true);
-  //   this.isLoggedIn = JSON.parse(session);
-  // } else {
-  //   sessionStorage.setItem("userloggedin", false);
-  //   this.isLoggedIn = JSON.parse(session);
-  // }
-
-  // if (sessionStorage.user) {
-  //   this.user = sessionStorage.user;
-  //   this.isLoggedIn = true;
-  // if (sessionStorage.user) {
-  //   this.isLoggedIn = true;
-  //   this.user = sessionStorage.user;
-  //   console.log(currUser + " is logged in");
-  // } else {
-  //   this.isLoggedIn = false;
-  //   console.log("user is not logged in");
-  // }
-
-  // watch: {
-  //   user(newName) {
-  //     sessionStorage.user = newName;
-  //     if (sessionStorage.user) {
-  //       this.isLoggedIn = true;
-  //     } else {
-  //       this.isLoggedIn = false;
-  //     }
-  //   }
-  // }
+  updated() {}
 };
 </script>
 <style>

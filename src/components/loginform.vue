@@ -1,9 +1,23 @@
 <template>
   <form>
-    <div :class="[clearedError ? bwoff :  bw]" class="form">
-      <div :class="[clearedError ? erroff : err ]" id="err">{{myerr}}</div>
-      <input @mousedown="clearError" required v-model="email" type="text" autocomplete="email" placeholder="username" />
-      <input required @keydown.prevent.enter="login(email,  password)" autocomplete="current-password" v-model="password" type="password" placeholder="password" />
+    <div :class="[clearedError ? bwoff : bw]" class="form">
+      <div :class="[clearedError ? erroff : err]" id="err">{{ myerr }}</div>
+      <input
+        @mousedown="clearError"
+        required
+        v-model="email"
+        type="text"
+        autocomplete="email"
+        placeholder="username"
+      />
+      <input
+        required
+        @keydown.prevent.enter="login(email, password);"
+        autocomplete="current-password"
+        v-model="password"
+        type="password"
+        placeholder="password"
+      />
       <button @click.prevent="login">login</button>
     </div>
   </form>

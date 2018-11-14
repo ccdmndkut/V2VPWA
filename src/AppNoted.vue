@@ -3,9 +3,7 @@
     <loader v-if="loading"> </loader>
     <v-app v-if="!loading">
       <template>
-        <transition name="zoom">
-          <login v-if="!loggedIn"></login>
-        </transition>
+        <transition name="zoom"> <login v-if="!loggedIn"></login> </transition>
         <!-- <home v-if="this.user" :user="user"></home> -->
         <transition name="fade">
           <maincont @logout="logout" v-if="loggedIn" :user="user"></maincont>
@@ -13,7 +11,6 @@
       </template>
     </v-app>
   </div>
-
 </template>
 
 <script>

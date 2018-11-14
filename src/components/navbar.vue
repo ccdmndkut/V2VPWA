@@ -2,35 +2,60 @@
   <v-toolbar height="70" app fixed color="vueblue">
     <div id="grid">
       <div id="left">
-        <v-btn large icon @click="$emit('changeDateYest', yest)">
+        <v-btn large icon @click="$emit('changeDateYest', yest);">
           <v-icon color="vuegreen" large>arrow_back</v-icon>
         </v-btn>
-        <v-btn large icon @click="$emit('changeDateToday')">
+        <v-btn large icon @click="$emit('changeDateToday');">
           <v-icon color="vuegreen" large>arrow_downward</v-icon>
         </v-btn>
-        <v-btn large icon @click="$emit('changeDateYest', tom)">
+        <v-btn large icon @click="$emit('changeDateYest', tom);">
           <v-icon color="vuegreen" large>arrow_forward</v-icon>
         </v-btn>
-        <v-btn large icon @click="$emit('newNote')">
+        <v-btn large icon @click="$emit('newNote');">
           <v-icon color="low" large>fiber_new</v-icon>
         </v-btn>
       </div>
       <div v-if="loading" id="mid">
-        <v-autocomplete id="searchBar" loading placeholder='Loading' solo prepend-inner-icon="search" flat class="mx-3" disabled></v-autocomplete>
+        <v-autocomplete
+          id="searchBar"
+          loading
+          placeholder="Loading"
+          solo
+          prepend-inner-icon="search"
+          flat
+          class="mx-3"
+          disabled
+        ></v-autocomplete>
       </div>
       <div v-if="!loading" id="mid">
-        <v-autocomplete id="searchBar" placeholder='Client Name' solo prepend-inner-icon="search" flat class="mx-3" @change="$emit('sentquery', newquery)" v-model="newquery" :items="names" item-text="name"></v-autocomplete>
+        <v-autocomplete
+          id="searchBar"
+          placeholder="Client Name"
+          solo
+          prepend-inner-icon="search"
+          flat
+          class="mx-3"
+          @change="$emit('sentquery', newquery);"
+          v-model="newquery"
+          :items="names"
+          item-text="name"
+        ></v-autocomplete>
       </div>
       <div id="right">
-        <v-btn round color="vuegreen" dark flat small @click="cam">
-          cam
+        <v-btn round color="vuegreen" dark flat small @click="cam"> cam </v-btn>
+        <v-btn
+          round
+          color="vuegreen"
+          dark
+          flat
+          small
+          @click="$emit('logoutEvent');"
+        >
+          Logout
         </v-btn>
-        <v-btn round color="vuegreen" dark flat small @click="$emit('logoutEvent')">
-          Logout </v-btn>
       </div>
     </div>
   </v-toolbar>
-
 </template>
 <script>
 import firebase from "firebase";

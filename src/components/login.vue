@@ -28,11 +28,11 @@ export default {
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 .form-enter {
-  filter: blur(25px) sepia(1);
+  filter: blur(5px);
   opacity: 0;
 }
 .form-leave-to {
-  filter: blur(25px);
+  filter: blur(10px);
   opacity: 0;
 }
 .form-leave,

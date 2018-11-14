@@ -1,15 +1,25 @@
 <template>
   <v-app id="body">
     <v-content>
-      <v-btn @click="updatedFunc" color="success">{{updated}}</v-btn>
+      <v-btn @click="updatedFunc" color="success">{{ updated }}</v-btn>
 
-      <v-alert transition="scale-transition" type="success" icon="check_circle" :value="this.updated">
-        {{this.updated}}
+      <v-alert
+        transition="scale-transition"
+        type="success"
+        icon="check_circle"
+        :value="this.updated"
+      >
+        {{ this.updated }}
       </v-alert>
       <div>
         <span v-for="n in frequency" :key="n">
-          <v-alert transition="scale-transition" type="success" icon="check_circle" :value="updated">
-            {{n}}
+          <v-alert
+            transition="scale-transition"
+            type="success"
+            icon="check_circle"
+            :value="updated"
+          >
+            {{ n }}
           </v-alert>
         </span>
       </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <maincont @logoutEvent="$emit('logoutEvent')" :user="user"></maincont>
+    <maincont @logoutEvent="$emit('logoutEvent');" :user="user"></maincont>
   </div>
 </template>
 

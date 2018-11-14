@@ -1,11 +1,5 @@
 <template>
-  <div id="body">
-    <h1>
-      loading
-
-    </h1>
-  </div>
-
+  <div id="body"><h1>loading</h1></div>
 </template>
 
 <script>

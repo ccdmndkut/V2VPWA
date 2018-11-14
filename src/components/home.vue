@@ -1,9 +1,7 @@
 <template>
-    <v-app>
-        <div>
-            {{user.email}}
-        </div>
-    </v-app>
+  <v-app>
+    <div>{{ user.email }}</div>
+  </v-app>
 </template>
 <script>
 import firebase from "firebase";
@@ -38,5 +36,4 @@ export default {
   }
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>
