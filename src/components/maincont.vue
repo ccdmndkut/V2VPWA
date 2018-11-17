@@ -7,7 +7,7 @@
           <v-progress-circular indeterminate color="primary"></v-progress-circular>
         </div>
         <template v-if="!loading">
-          <div v-for="(item, i) in db.tasks" :key="i">
+          <div v-for="item in db" :key="item['.key']">
             <listitem @deleteNote='deleteNote' :loading="loading" :item="item"></listitem>
           </div>
         </template>
@@ -18,9 +18,9 @@
 </template>
 <script>
 import firebase from "firebase";
-import firestore from "./firebaseInit";
 import navbar from "./navbar";
 import listitem from "./listitem";
+import { db } from "../main";
 
 export default {
   name: "maincont",
@@ -31,26 +31,16 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      db: [],
       query: "",
-      db: {
-        tasks: "",
-        main: ""
-      }
+    };
+  },
+  firestore() {
+    return {
+      db: db
     };
   },
   methods: {
-    fs(i) {
-      var a = this;
-      this.$binding("tasks", firebase.firestore().collection(i)).then(function(
-        b
-      ) {
-        console.log("got db");
-        a.db.tasks = b;
-        a.db.main = b;
-        a.loaded();
-      });
-    },
     loaded() {
       this.loading = false;
     },
@@ -62,14 +52,14 @@ export default {
       this.searchFunc();
     },
     searchFunc() {
-      const result = this.db.main.filter(client => client.name === this.query);
+      const result = this.db.filter(client => client.name === this.query);
       result.sort(this.compareD);
-      this.db.tasks = result;
+      this.db = result;
     },
     dateFunc() {
-      const result = this.db.main.filter(client => client.date === this.date);
+      const result = this.db.filter(client => client.date === this.date);
       result.sort(this.compareP);
-      this.db.tasks = result;
+      this.db = result;
     },
     compareP: function(a, b) {
       const nameA = a.priority;
@@ -89,6 +79,13 @@ export default {
     }
   },
   computed: {
+    loading() {
+if (this.db.length > 1) {
+  return false
+} else {
+  return true
+}
+    },
     currentUser() {
       return this.user.email;
     },
@@ -118,9 +115,9 @@ export default {
   mounted() {
     // var useremail = firebase.auth().currentUser.email;
     // this.currentUser = useremail;
-    var db = this.userdbdef.trash;
-    this.fs(db);
-    console.log("maincont.vue mounted");
+    // var db = this.userdbdef.trash;
+    // this.fs(db);
+    // console.log("maincont.vue mounted");
   }
 };
 </script>

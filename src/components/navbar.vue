@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     names() {
-      var array = this.db.main;
+      var array = this.db;
       const unique = [...new Set(array.map(item => item.name))];
       var mapped = unique.map(item => ({
         key: item,
